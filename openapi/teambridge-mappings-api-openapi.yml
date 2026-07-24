@@ -1,0 +1,318 @@
+openapi: 3.1.0
+info:
+  title: Teambridge External Collections (Unified API) Collections (Unified API) Mappings API
+  version: 0.1.0
+  description: 'External API for Teambridge platform.
+
+
+    **Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).
+
+    Examples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).
+
+
+    **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
+
+
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
+
+    '
+servers:
+- url: https://open-api.teambridge.com
+  description: Production API server
+security:
+- OAuth2:
+  - write
+tags:
+- name: Mappings
+  description: 'Endpoints for managing external system mappings. Mappings link Teambridge records
+
+    to entities in external systems (like Bullhorn, ADP, etc.) by storing the external
+
+    provider code, external ID, and object type.
+
+    '
+paths:
+  /v1/mappings:
+    get:
+      tags:
+      - Mappings
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: List all mappings for a record
+      description: 'Returns all external system mappings for a specific Teambridge record.
+
+        Mappings link records to external system entities.
+
+        '
+      operationId: listMappings
+      parameters:
+      - name: recordId
+        in: query
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the Teambridge record to get mappings for
+      security:
+      - OAuth2:
+        - write
+      responses:
+        '200':
+          description: List of mappings for the record
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MappingDto'
+                  error:
+                    type: 'null'
+        '400':
+          description: Bad request - missing or invalid recordId
+        '401':
+          description: Unauthorized
+    post:
+      tags:
+      - Mappings
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Create a new mapping
+      description: 'Creates a new mapping linking a Teambridge record to an external system entity.
+
+        Each mapping associates a record with an external provider, external ID, and object type.
+
+        '
+      operationId: createMapping
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateMappingRequest'
+      security:
+      - OAuth2:
+        - write
+      responses:
+        '200':
+          description: Mapping created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/MappingDto'
+                  error:
+                    type: 'null'
+        '400':
+          description: Bad request - invalid data or mapping already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardErrorResponse'
+        '401':
+          description: Unauthorized
+  /v1/mappings/{mappingId}:
+    put:
+      tags:
+      - Mappings
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Update an existing mapping
+      description: 'Updates the external ID for an existing mapping. This is useful when the
+
+        external system ID changes but the mapping relationship should be preserved.
+
+        '
+      operationId: updateMapping
+      parameters:
+      - name: mappingId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the mapping to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMappingRequest'
+      security:
+      - OAuth2:
+        - write
+      responses:
+        '200':
+          description: Mapping updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/MappingDto'
+                  error:
+                    type: 'null'
+        '400':
+          description: Bad request - invalid data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Mapping not found
+    delete:
+      tags:
+      - Mappings
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Delete a mapping
+      description: 'Deletes an external system mapping. This removes the link between a Teambridge
+
+        record and an external system entity without affecting the underlying record.
+
+        '
+      operationId: deleteMapping
+      parameters:
+      - name: mappingId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: UUID of the mapping to delete
+      security:
+      - OAuth2:
+        - write
+      responses:
+        '204':
+          description: Mapping deleted successfully
+        '401':
+          description: Unauthorized
+        '404':
+          description: Mapping not found
+components:
+  schemas:
+    StandardErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      required:
+      - error
+    MappingDto:
+      type: object
+      required:
+      - mappingId
+      - recordId
+      - providerCode
+      - externalId
+      - createdAt
+      properties:
+        mappingId:
+          type: string
+          format: uuid
+          description: Unique identifier for the mapping
+          example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+        recordId:
+          type: string
+          format: uuid
+          description: ID of the record in Teambridge
+          example: 550e8400-e29b-41d4-a716-446655440000
+        providerCode:
+          type: string
+          description: Code identifying the external provider
+          example: BULLHORN
+        externalId:
+          type: string
+          description: ID of the entity in the external system
+          example: EXT-12345
+        externalObjectType:
+          type:
+          - string
+          - 'null'
+          description: Type of the object in the external system
+          example: Candidate
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the mapping was created in ISO 8601 format with timezone (YYYY-MM-DDTHH:MM:SSZ)
+          example: '2025-01-15T10:30:00Z'
+    UpdateMappingRequest:
+      type: object
+      required:
+      - externalId
+      properties:
+        externalId:
+          type: string
+          description: New external ID for the mapping
+          example: EXT-67890
+    CreateMappingRequest:
+      type: object
+      required:
+      - recordId
+      - providerCode
+      - externalId
+      - externalObjectType
+      properties:
+        recordId:
+          type: string
+          format: uuid
+          description: ID of the record in Teambridge
+          example: 550e8400-e29b-41d4-a716-446655440000
+        providerCode:
+          type: string
+          description: Code identifying the external provider
+          example: BULLHORN
+        externalId:
+          type: string
+          description: ID of the entity in the external system
+          example: EXT-12345
+        externalObjectType:
+          type: string
+          description: Type of the object in the external system
+          example: Candidate
+    ErrorDetail:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+      required:
+      - message
+      - code
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://teambridge.us.auth0.com/oauth/token
+          scopes:
+            write: Full access
+    WebhookSignature:
+      type: apiKey
+      in: header
+      name: X-Webhook-Signature
+      description: 'HMAC-SHA256 signature for webhook authentication. The signature is computed from
+
+        the concatenation of the timestamp and request body: `{timestamp}.{body}`.
+
+        The signature header value includes the scheme prefix: `sha256={hex_signature}`.
+
+
+        Webhook consumers must verify this signature using their webhook secret to ensure
+
+        the request originated from Teambridge.
+
+        '

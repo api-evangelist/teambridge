@@ -1,0 +1,84 @@
+openapi: 3.1.0
+info:
+  title: Teambridge External Collections (Unified API) Collections (Unified API) Utilities API
+  version: 0.1.0
+  description: 'External API for Teambridge platform.
+
+
+    **Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).
+
+    Examples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).
+
+
+    **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
+
+
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
+
+    '
+servers:
+- url: https://open-api.teambridge.com
+  description: Production API server
+security:
+- OAuth2:
+  - write
+tags:
+- name: Utilities
+  description: Utility endpoints for timezone information and other general-purpose data.
+paths:
+  /v1/timezones:
+    get:
+      tags:
+      - Utilities
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Get supported timezones
+      description: Returns a list of all supported timezone identifiers, sorted alphabetically.
+      security:
+      - OAuth2:
+        - write
+      responses:
+        '200':
+          description: List of supported timezones
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TimezonesList'
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    TimezonesList:
+      type: array
+      items:
+        type: string
+      description: List of supported timezone identifiers
+      example:
+      - America/Los_Angeles
+      - America/New_York
+      - Europe/London
+      - Asia/Tokyo
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://teambridge.us.auth0.com/oauth/token
+          scopes:
+            write: Full access
+    WebhookSignature:
+      type: apiKey
+      in: header
+      name: X-Webhook-Signature
+      description: 'HMAC-SHA256 signature for webhook authentication. The signature is computed from
+
+        the concatenation of the timestamp and request body: `{timestamp}.{body}`.
+
+        The signature header value includes the scheme prefix: `sha256={hex_signature}`.
+
+
+        Webhook consumers must verify this signature using their webhook secret to ensure
+
+        the request originated from Teambridge.
+
+        '

@@ -1,0 +1,251 @@
+openapi: 3.1.0
+info:
+  title: Teambridge External Collections (Unified API) Collections (Unified API) Documents API
+  version: 0.1.0
+  description: 'External API for Teambridge platform.
+
+
+    **Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).
+
+    Examples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).
+
+
+    **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
+
+
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
+
+    '
+servers:
+- url: https://open-api.teambridge.com
+  description: Production API server
+security:
+- OAuth2:
+  - write
+tags:
+- name: Documents
+  description: Endpoints for uploading and managing documents.
+paths:
+  /v1/documents:
+    post:
+      tags:
+      - Documents
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Upload a document
+      description: 'Uploads a document file with optional metadata for the authenticated account.
+
+
+        **Important**: This endpoint requires `multipart/form-data` content type for file upload.
+
+
+        **Limits**:
+
+        - Maximum file size: 100MB
+
+        - Maximum roles per document: 10
+
+
+        The request consists of two parts:
+
+        - `file`: The document file to upload (required)
+
+        - `request`: JSON metadata for the document (optional)
+
+        '
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+              - file
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: The document file to upload (max 100MB)
+                request:
+                  $ref: '#/components/schemas/CreateDocumentRequest'
+      security:
+      - OAuth2:
+        - write
+      responses:
+        '200':
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/CreateDocumentResponse'
+                  error:
+                    type: 'null'
+        '400':
+          description: Bad request - file size exceeds 100MB or more than 10 roles assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StandardErrorResponse'
+              examples:
+                maxFileSize:
+                  summary: File size exceeded
+                  value:
+                    data: null
+                    error:
+                      message: File size of 150MB exceeds maximum allowed size of 100MB
+                      code: MAX_FILE_SIZE_EXCEEDED
+                maxRoles:
+                  summary: Too many roles
+                  value:
+                    data: null
+                    error:
+                      message: Cannot assign more than 10 roles to a document
+                      code: MAX_ROLES_PER_DOCUMENT_EXCEEDED
+        '401':
+          description: Unauthorized
+components:
+  schemas:
+    ErrorDetail:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+      required:
+      - message
+      - code
+    CreateDocumentRequest:
+      type: object
+      properties:
+        isRequired:
+          type: boolean
+          default: false
+          description: Whether the document is required
+          example: true
+        status:
+          type:
+          - string
+          - 'null'
+          enum:
+          - PENDING
+          - COMPLETED
+          - APPROVED
+          - REJECTED
+          description: Document status
+          example: PENDING
+        userId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: ID of the user associated with the document
+          example: 123e4567-e89b-12d3-a456-426614174000
+        roles:
+          type:
+          - array
+          - 'null'
+          items:
+            type: string
+          maxItems: 10
+          description: List of role names to associate with the document (max 10)
+          example:
+          - nurse
+          - admin
+        expiryDate:
+          type:
+          - string
+          - 'null'
+          format: date-time
+          description: Document expiry date in ISO 8601 format with timezone (YYYY-MM-DDTHH:MM:SSZ)
+          example: '2025-12-31T23:59:59Z'
+        customFields:
+          type:
+          - object
+          - 'null'
+          additionalProperties:
+            type: string
+          description: 'Map of custom field values to store with the document. Keys must be valid UUIDs
+
+            corresponding to custom field schema IDs defined in the document collection.
+
+            Invalid or unknown schema UUIDs will result in a `400` error.
+
+            '
+          example:
+            550e8400-e29b-41d4-a716-446655440000: Issued by State Board
+            660e8400-e29b-41d4-a716-446655440001: '2026-01-15'
+    CreateDocumentResponse:
+      type: object
+      required:
+      - url
+      - fileName
+      - contentType
+      properties:
+        recordId:
+          type: string
+          format: uuid
+          example: 200c7b23-5ba6-4cf4-a332-6da9394b7112
+        url:
+          type: string
+          description: URL of the uploaded document
+          example: https://storage.example.com/documents/550e8400-e29b-41d4-a716-446655440000/document.pdf
+        fileName:
+          type: string
+          description: Name of the uploaded file
+          example: certification.pdf
+        contentType:
+          type: string
+          description: MIME type of the uploaded file
+          example: application/pdf
+        customFields:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: 'Map of custom field values stored with the document. Keys are the custom field
+
+            schema UUIDs. Present only when custom fields were provided at upload time.
+
+            '
+          example:
+            550e8400-e29b-41d4-a716-446655440000: Issued by State Board
+            660e8400-e29b-41d4-a716-446655440001: '2026-01-15'
+    StandardErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      required:
+      - error
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://teambridge.us.auth0.com/oauth/token
+          scopes:
+            write: Full access
+    WebhookSignature:
+      type: apiKey
+      in: header
+      name: X-Webhook-Signature
+      description: 'HMAC-SHA256 signature for webhook authentication. The signature is computed from
+
+        the concatenation of the timestamp and request body: `{timestamp}.{body}`.
+
+        The signature header value includes the scheme prefix: `sha256={hex_signature}`.
+
+
+        Webhook consumers must verify this signature using their webhook secret to ensure
+
+        the request originated from Teambridge.
+
+        '

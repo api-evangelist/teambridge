@@ -1,0 +1,793 @@
+openapi: 3.1.0
+info:
+  title: Teambridge External Collections (Unified API) Collections (Unified API) Collections (Unified API) API
+  version: 0.1.0
+  description: 'External API for Teambridge platform.
+
+
+    **Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).
+
+    Examples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).
+
+
+    **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
+
+
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
+
+    '
+servers:
+- url: https://open-api.teambridge.com
+  description: Production API server
+security:
+- OAuth2:
+  - write
+tags:
+- name: Collections (Unified API)
+  description: '**Powerful generic endpoints** for reading and writing any collection type.
+
+    Works with all collections using field UUIDs. Query `/fields` first to
+
+    discover the schema, then use these endpoints for flexible data access across
+
+    all collection types (shifts, users, placements, locations, custom collections, etc.).
+
+
+    ## Filtering
+
+
+    The unified Collections API (`/v1/collections/{collectionId}/records`) supports powerful filtering via query parameters.
+
+    You can filter records by adding query parameters in the format `{fieldUUID}_{operator}={value}`.
+
+
+    **Supported Operators:**
+
+    - `_is`: Exact match (all field types) - **default if no suffix provided**
+
+    - `_contains`: Partial text match (TEXT fields only)
+
+    - `_gt`: Greater than (NUMBER, DATETIME fields)
+
+    - `_gte`: Greater than or equal (NUMBER, DATETIME fields)
+
+    - `_lt`: Less than (NUMBER, DATETIME fields)
+
+    - `_lte`: Less than or equal (NUMBER, DATETIME fields)
+
+
+    **Filtering Features:**
+
+    - **Multiple filters**: Up to 10 filters per request with implicit AND logic (all must match)
+
+    - **Default operator**: Parameters without a suffix default to `_is` behavior
+
+    - **Multiple operators on same field**: Allowed (e.g., `age_gte=21&age_lte=65` for range queries)
+
+    - **Case-insensitive**: TEXT and SELECT field matching is case-insensitive
+
+    - **Smart date handling**: DATETIME fields support both date-only (`2025-01-01`) and full ISO 8601 format (`2025-01-01T14:30:00Z`)
+
+
+    **Reserved Parameters**: The following parameter names are reserved and cannot be used as filter bases: `page`, `size`, `limit`, `offset`.
+
+
+    **Filtering Examples:**
+
+    - Single filter (exact match): `?550e8400-..._is=john@example.com`
+
+    - Default operator (no suffix): `?550e8400-...=john@example.com` (equivalent to `_is`)
+
+    - Partial text match: `?550e8400-..._contains=john`
+
+    - Date exact match: `?abc123-..._is=2025-12-01`
+
+    - Date range: `?abc123-..._gte=2025-01-01&abc123-..._lte=2025-12-31`
+
+    - Number range: `?age-uuid-..._gte=21&age-uuid-..._lte=65`
+
+    - Multiple fields: `?550e8400-..._is=john@example.com&7c9e6679-..._is=active`
+
+    - Mixed operators: `?name-uuid-..._contains=john&age-uuid-..._gte=21`
+
+    '
+paths:
+  /v1/collections:
+    get:
+      tags:
+      - Collections (Unified API)
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: List collections
+      description: Returns metadata about all collections for the account associated with the provided access token.
+      operationId: listCollections
+      responses:
+        '200':
+          description: List of collections
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ListCollectionsResponse'
+  /v1/collections/{collectionId}/fields:
+    get:
+      tags:
+      - Collections (Unified API)
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Retrieve field metadata for a collection
+      description: 'Returns all field definitions for a collection, including field identifiers, names,
+
+        types, write format hints, select options (for native selects), and linked collection IDs
+
+        (for link-to-object fields). Use this endpoint to discover the schema before reading or writing records.
+
+        '
+      operationId: listFields
+      parameters:
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique ID of the collection
+      responses:
+        '200':
+          description: List of field definitions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Field'
+                  error:
+                    type: 'null'
+              example:
+                data:
+                - id: c5a8e667-fe00-4c18-a559-84bfdbf7e8d1
+                  name: First Name
+                  readOnly: false
+                  type: TEXT
+                  writeFormatHint: plain_text
+                - id: df14fac6-ce85-480b-a5a8-0e5b90471205
+                  name: Last Name
+                  readOnly: false
+                  type: TEXT
+                  writeFormatHint: plain_text
+                - id: 199c7b23-5ba6-4cf4-a778-6da9394b7884
+                  name: Email
+                  readOnly: false
+                  type: EMAIL
+                  writeFormatHint: email
+                - id: f7958d78-9e4c-4d23-a16e-ac732636b281
+                  name: Phone
+                  readOnly: false
+                  type: PHONE
+                  writeFormatHint: e164_phone
+                - id: 7064ba02-0ba2-48ca-9d0d-3698630b0050
+                  name: Date of Birth
+                  readOnly: false
+                  type: DATETIME
+                  writeFormatHint: iso8601_datetime
+                - id: 39336d37-1d19-4b84-9bf9-6d8e88938558
+                  name: Certifications
+                  readOnly: false
+                  type: LINK_TO_ROLE
+                  writeFormatHint: comma_separated_uuids
+                  linkedCollectionId: 7822e1fa-dfde-4090-bf1e-bb41a31c763f
+                - id: e33d4a71-5140-4a30-afc7-567471a89c39
+                  name: Assigned Facilities
+                  readOnly: false
+                  type: LINK_TO_LOCATION
+                  writeFormatHint: comma_separated_uuids
+                  linkedCollectionId: b8e9e5a9-074d-4df2-a95a-4c8dbd5d8781
+                - id: 1d566c20-accd-450f-afad-8c572f176bd0
+                  name: Employment Status
+                  readOnly: false
+                  type: SINGLE_SELECT
+                  writeFormatHint: single_uuid
+                  selectOptions:
+                  - id: bb31a869-2e73-4468-ab94-73ea256e08a2
+                    name: Full-Time
+                  - id: 68ddbd25-b819-4362-add1-9c87c079515c
+                    name: Part-Time
+                  - id: 4bfabc6f-f512-4c48-849b-8c94b83c215e
+                    name: Per Diem
+                - id: 5ef9a0a5-f7e5-42a7-af8c-927a9057c839
+                  name: Specialties
+                  readOnly: false
+                  type: MULTI_SELECT
+                  writeFormatHint: comma_separated_uuids
+                  selectOptions:
+                  - id: 641367e5-0c24-4eb4-8b32-eda6a87540f3
+                    name: ICU
+                  - id: 89667f7f-cc87-4246-9f10-e0cfe13fdd8c
+                    name: ER
+                  - id: 4374192c-ece1-4475-9372-23dbe0f98527
+                    name: Surgery
+                - id: 0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7
+                  name: Created At
+                  readOnly: true
+                  type: COMPUTED
+                - id: a943302a-5b1e-4ba9-b4c0-728c8e7fe2bd
+                  name: Home Address
+                  readOnly: false
+                  type: ADDRESS
+                  writeFormatHint: plain_text
+                error: null
+        '401':
+          description: Unauthorized
+        '404':
+          description: Collection not found
+  /v1/collections/{collectionId}/records:
+    get:
+      tags:
+      - Collections (Unified API)
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: List records in a collection
+      description: 'Returns a paginated list of records for a collection. Each record is represented
+
+        as a map of field UUIDs to values. Use the /fields endpoint first to get field metadata
+
+        (names, types, write format hints) to interpret the data.
+
+
+        **Filtering Support:**
+
+        This endpoint supports filtering via query parameters in the format `{fieldUUID}_{operator}={value}`.
+
+        - Up to 10 filters per request with implicit AND logic (all filters must match)
+
+        - Use the /fields endpoint to discover field UUIDs
+
+        - See the API description above for detailed filtering documentation and examples
+
+
+        **Supported Operators by Field Type:**
+
+        - **TEXT**: `_is` (exact), `_contains` (partial match)
+
+        - **NUMBER**: `_is`, `_gt`, `_gte`, `_lt`, `_lte`
+
+        - **DATETIME**: `_is`, `_gt`, `_gte`, `_lt`, `_lte`
+
+        - **BOOLEAN**: `_is`
+
+        - **SINGLE_SELECT/MULTI_SELECT**: `_is`
+
+        - **LINK_TO_USER / LINK_TO_ROLE / LINK_TO_LOCATION / LINK_TO_JOB / LINK_TO_SHIFT / LINK_TO_PLACEMENT / LINK_TO_SHIFT_GROUP / LINK_TO_CONTACT / LINK_TO_TASK / CUSTOM_FIELD**: `_is` (pass the record ID of the linked record; returns records where that record is one of the field''s selected values)
+
+        - **Default**: No suffix defaults to `_is` behavior
+
+
+        **Filter Examples:**
+
+        - Filter by email: `?{email-field-uuid}_is=john@example.com`
+
+        - Filter by partial name: `?{name-field-uuid}_contains=john`
+
+        - Filter by date range: `?{date-field-uuid}_gte=2025-01-01&{date-field-uuid}_lte=2025-12-31`
+
+        - Filter by age range: `?{age-field-uuid}_gte=21&{age-field-uuid}_lte=65`
+
+        - Multiple filters: `?{field1-uuid}_is=value1&{field2-uuid}_contains=value2`
+
+        '
+      operationId: listRecords
+      parameters:
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique ID of the collection
+      - name: page
+        in: query
+        required: true
+        description: Zero-based page index
+        schema:
+          type: integer
+          minimum: 0
+          default: 0
+      - name: size
+        in: query
+        required: true
+        description: Number of records per page (maximum 50)
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 20
+      - name: enriched
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: 'When `true`, each record''s `metadata` object will include an `externalRecordMappings` array
+
+          containing any external ID mappings linked to that record (e.g. from Bullhorn, ADP).
+
+          If no mappings exist the array will be empty. Has no effect on the `data` fields.
+
+          '
+      responses:
+        '200':
+          description: List of records in the collection
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RecordData'
+                  error:
+                    type: 'null'
+              examples:
+                standard:
+                  summary: Standard response (enriched=false)
+                  value:
+                    data:
+                    - metadata:
+                        recordId: 550e8400-e29b-41d4-a716-446655440000
+                      data:
+                        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+                        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+                        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+                    - metadata:
+                        recordId: 660e8400-e29b-41d4-a716-446655440001
+                      data:
+                        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: John
+                        df14fac6-ce85-480b-a5a8-0e5b90471205: Doe
+                        199c7b23-5ba6-4cf4-a778-6da9394b7884: john.doe@hospital.com
+                    error: null
+                enriched:
+                  summary: Enriched response with external ID mappings (enriched=true)
+                  value:
+                    data:
+                    - metadata:
+                        recordId: 550e8400-e29b-41d4-a716-446655440000
+                        externalRecordMappings:
+                        - providerCode: BULLHORN
+                          externalId: EXT-12345
+                          externalObjectType: Candidate
+                      data:
+                        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+                        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+                        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+                    - metadata:
+                        recordId: 660e8400-e29b-41d4-a716-446655440001
+                        externalRecordMappings: []
+                      data:
+                        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: John
+                        df14fac6-ce85-480b-a5a8-0e5b90471205: Doe
+                        199c7b23-5ba6-4cf4-a778-6da9394b7884: john.doe@hospital.com
+                    error: null
+        '400':
+          description: Bad request (e.g., page size exceeds maximum)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Collection not found
+    post:
+      tags:
+      - Collections (Unified API)
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Create a new record
+      description: 'Creates a new record in the collection. The request body should contain a map
+
+        of field UUIDs to string values. Use the /fields endpoint to discover field IDs
+
+        and their expected write formats (writeFormatHint).
+
+        '
+      operationId: createRecord
+      parameters:
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique ID of the collection
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericWriteRequest'
+      responses:
+        '200':
+          description: Record created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateRecordResponse'
+        '400':
+          description: Bad request (validation error, invalid field values, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Collection not found
+  /v1/collections/{collectionId}/records/{recordId}:
+    get:
+      tags:
+      - Collections (Unified API)
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Get a single record by ID
+      description: 'Returns a single record identified by its UUID. The record is represented as
+
+        a map of field UUIDs to values. Use the /fields endpoint to get field metadata.
+
+        '
+      operationId: getRecord
+      parameters:
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique ID of the collection
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique ID of the record
+      - name: enriched
+        in: query
+        required: false
+        schema:
+          type: boolean
+          default: false
+        description: 'When `true`, the `metadata` object will include an `externalRecordMappings` array
+
+          containing any external ID mappings linked to this record (e.g. from Bullhorn, ADP).
+
+          If no mappings exist the array will be empty. Has no effect on the `data` fields.
+
+          '
+      responses:
+        '200':
+          description: Record found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RecordData'
+                  error:
+                    type: 'null'
+              examples:
+                standard:
+                  summary: Standard response (enriched=false)
+                  value:
+                    data:
+                      metadata:
+                        recordId: 550e8400-e29b-41d4-a716-446655440000
+                      data:
+                        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+                        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+                        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+                        f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
+                    error: null
+                enriched:
+                  summary: Enriched response with external ID mappings (enriched=true)
+                  value:
+                    data:
+                      metadata:
+                        recordId: 550e8400-e29b-41d4-a716-446655440000
+                        externalRecordMappings:
+                        - providerCode: BULLHORN
+                          externalId: EXT-12345
+                          externalObjectType: Candidate
+                      data:
+                        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+                        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+                        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+                        f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
+                    error: null
+        '401':
+          description: Unauthorized
+        '404':
+          description: Record or collection not found
+    put:
+      tags:
+      - Collections (Unified API)
+      servers:
+      - url: https://open-api.teambridge.com
+      summary: Update an existing record
+      description: 'Updates an existing record. The request body should contain a map of field UUIDs
+
+        to string values for the fields you want to update. Only include fields that need
+
+        to be changed. Use the /fields endpoint to discover field IDs and write formats.
+
+        '
+      operationId: updateRecord
+      parameters:
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique ID of the collection
+      - name: recordId
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Unique ID of the record to update
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenericWriteRequest'
+      responses:
+        '200':
+          description: Record updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RecordData'
+                  error:
+                    type: 'null'
+        '400':
+          description: Bad request (validation error, invalid field values, etc.)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenericErrorResponse'
+        '401':
+          description: Unauthorized
+        '404':
+          description: Record or collection not found
+components:
+  schemas:
+    ListCollectionsMetadata:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        count:
+          type: integer
+          example: 1
+      required:
+      - accountId
+      - count
+    ListCollectionsResponse:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ListCollectionsMetadata'
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Collection'
+    Collection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Shifts
+      required:
+      - id
+      - name
+    GenericWriteRequest:
+      type: object
+      properties:
+        data:
+          type: object
+          additionalProperties:
+            type: string
+          description: 'Map of field UUIDs to string values. Keys are the field identifiers (UUIDs),
+
+            values are the field values formatted according to the field''s writeFormatHint.
+
+            '
+          example:
+            c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+            df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+            199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+            f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
+            7064ba02-0ba2-48ca-9d0d-3698630b0050: '1985-03-15T00:00:00Z'
+            39336d37-1d19-4b84-9bf9-6d8e88938558: bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c
+            1d566c20-accd-450f-afad-8c572f176bd0: 4bfabc6f-f512-4c48-849b-8c94b83c215e
+      required:
+      - data
+    CreateRecordResponse:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Success message containing the created record ID
+          example: 'Resource created with ID: 123e4567-e89b-12d3-a456-426614174000'
+        error:
+          type: 'null'
+    Field:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the field
+          example: 199c7b23-5ba6-4cf4-a778-6da9394b7884
+        name:
+          type: string
+          description: Field name/label
+          example: Nursing License Number
+        readOnly:
+          type: boolean
+          description: 'Whether this field is read-only. Read-only fields (typically COMPUTED or AGGREGATE types)
+
+            cannot be set via write operations.
+
+            '
+          example: false
+        type:
+          type: string
+          description: Public-facing field type
+          enum:
+          - TEXT
+          - NUMBER
+          - BOOLEAN
+          - DATETIME
+          - CURRENCY
+          - PHONE
+          - EMAIL
+          - ADDRESS
+          - SINGLE_SELECT
+          - MULTI_SELECT
+          - LINK_TO_USER
+          - LINK_TO_LOCATION
+          - LINK_TO_ROLE
+          - LINK_TO_JOB
+          - LINK_TO_SHIFT
+          - LINK_TO_PLACEMENT
+          - LINK_TO_SHIFT_GROUP
+          - LINK_TO_CONTACT
+          - LINK_TO_TASK
+          - CUSTOM_FIELD
+          - COMPUTED
+          - AGGREGATE
+          - GEOFENCE
+          - FILE
+          - BREAK
+          - DATETIME_RANGE
+          - RATING
+          example: PHONE
+        selectOptions:
+          type:
+          - array
+          - 'null'
+          items:
+            $ref: '#/components/schemas/SelectOption'
+          description: 'Available options for native select fields (SINGLE_SELECT and MULTI_SELECT types only).
+
+            Not populated for LINK_TO_* fields or CUSTOM_FIELD types - query those collections separately
+
+            using the linkedCollectionId.
+
+            '
+        writeFormatHint:
+          type:
+          - string
+          - 'null'
+          description: 'Format hint for write operations. Only present for writable fields (readOnly=false).
+
+            Common values: "plain_text", "single_uuid", "comma_separated_uuids", "iso8601_datetime",
+
+            "e164_phone", "email", "currency_amount", "boolean", "number", "numeric_string"
+
+            '
+          example: e164_phone
+        linkedCollectionId:
+          type:
+          - string
+          - 'null'
+          format: uuid
+          description: 'For LINK_TO_* and CUSTOM_FIELD types, the UUID of the collection to query for valid record options.
+
+            Query GET /v1/collections/{linkedCollectionId}/records to see available options.
+
+            '
+          example: b8e9e5a9-074d-4df2-a95a-4c8dbd5d8781
+      required:
+      - id
+      - name
+      - readOnly
+      - type
+    RecordData:
+      type: object
+      additionalProperties: true
+      description: 'Record data as a map of field UUIDs to values. Keys are field identifiers (UUIDs).
+
+        Values are typed according to the field type (string, number, boolean, object, array, or null).
+
+        '
+      example:
+        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+        f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
+        8d74ff97-4cb5-49c8-af77-a3d98af4b1c2: false
+        ade2b23c-6a3b-49fe-bc13-d37b0c39941c: 1234
+        0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7: '2024-01-15T10:30:00Z'
+    GenericErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: The page size exceeds the limit of 50
+    SelectOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Option identifier (use this UUID in write requests)
+          example: bb31a869-2e73-4468-ab94-73ea256e08a2
+        name:
+          type: string
+          description: Option display name
+          example: RN - Registered Nurse
+      required:
+      - id
+      - name
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://teambridge.us.auth0.com/oauth/token
+          scopes:
+            write: Full access
+    WebhookSignature:
+      type: apiKey
+      in: header
+      name: X-Webhook-Signature
+      description: 'HMAC-SHA256 signature for webhook authentication. The signature is computed from
+
+        the concatenation of the timestamp and request body: `{timestamp}.{body}`.
+
+        The signature header value includes the scheme prefix: `sha256={hex_signature}`.
+
+
+        Webhook consumers must verify this signature using their webhook secret to ensure
+
+        the request originated from Teambridge.
+
+        '
