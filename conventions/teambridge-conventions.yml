@@ -1,0 +1,65 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.teambridge.com
+api: openapi/teambridge-openapi-original.json
+summary: >-
+  Cross-cutting request/response conventions for the Teambridge External API, a
+  unified Collections API over the workforce-management platform (shifts, users,
+  placements, locations, and custom collections). Derived from the published
+  OpenAPI 3.1.0 spec and the Redocly documentation at docs.teambridge.com.
+authentication:
+  style: oauth2-client-credentials
+  token_url: https://teambridge.us.auth0.com/oauth/token
+  scopes: [write]
+  detail: authentication/teambridge-authentication.yml
+base_url: https://open-api.teambridge.com
+versioning:
+  style: uri-path
+  current: v1
+  detail: lifecycle/teambridge-lifecycle.yml
+pagination:
+  style: offset
+  params:
+    - name: page
+      description: Zero-based page index (default 0)
+    - name: size
+      description: Records per page (min 1, max 50, default 20)
+  required: true
+  note: page and size are required query parameters on listRecords.
+filtering:
+  applies_to: GET /v1/collections/{collectionId}/records
+  max_filters: 10
+  operators: ['_is', '_contains', '_gt', '_gte', '_lt', '_lte']
+  note: >-
+    Field-level filters are passed as query parameters using the field name plus
+    an operator suffix. Up to 10 filters may be combined in a single request.
+enrichment:
+  param: enriched
+  description: >-
+    When true, each record's metadata object includes an externalRecordMappings
+    array of external ID mappings (e.g. Bullhorn, ADP) linked to that record.
+date_time_format:
+  standard: ISO 8601 with timezone (YYYY-MM-DDTHH:MM:SSZ)
+  examples: ['2025-06-05T09:00:00Z', '2025-06-05T09:00:00-07:00']
+identifiers:
+  format: uuid
+  note: collectionId, recordId, mappingId, account_id, event_id are UUIDs.
+response_envelope:
+  shape: '{ "data": <value>, "error": <null | string | ErrorDetail> }'
+  success: 'error is null; data carries the payload'
+  error: 'data is null; error carries a message string or an ErrorDetail {message, code}'
+  detail: errors/teambridge-problem-types.yml
+idempotency:
+  request_level: false
+  note: >-
+    The write API does not document an Idempotency-Key request header. Idempotency
+    is provided on the WEBHOOK CONSUMER side: each webhook payload carries a unique
+    event_id (UUID) intended for idempotent processing to prevent duplicate handling
+    of the same event.
+webhooks:
+  detail: asyncapi/teambridge-webhooks.yml
+  signature: HMAC-SHA256 over `{timestamp}.{rawBody}`, header X-Webhook-Signature (sha256= prefix)
+  replay_window: 5 minutes (X-Webhook-Timestamp)
+rate_limits:
+  documented: false
+  note: No rate-limit policy is published in the docs or spec.

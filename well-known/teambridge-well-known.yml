@@ -1,0 +1,26 @@
+generated: '2026-07-21'
+method: searched
+note: >-
+  Probed /.well-known/ discovery paths on the website, docs host, and API host.
+  No documents returned 200. The API host (open-api.teambridge.com) returns 401
+  for all paths (auth wall), not a published discovery document. No WellKnown
+  artifact pointer is wired because nothing was publicly served.
+hosts:
+  - host: https://teambridge.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}
+  - host: https://open-api.teambridge.com
+    documents:
+      - {path: /.well-known/security.txt, status: 401}
+      - {path: /.well-known/openid-configuration, status: 401}
+      - {path: /.well-known/oauth-authorization-server, status: 401}
+      - {path: /.well-known/api-catalog, status: 401}
+  - host: https://docs.teambridge.com
+    documents:
+      - {path: /.well-known/security.txt, status: 404}
+      - {path: /.well-known/openid-configuration, status: 404}
+      - {path: /.well-known/oauth-authorization-server, status: 404}
+      - {path: /.well-known/api-catalog, status: 404}

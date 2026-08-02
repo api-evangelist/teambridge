@@ -1,8 +1,28 @@
 aid: teambridge
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/teambridge.png
 name: Teambridge
-description: Teambridge is a company surfaced as a portfolio company of general-catalyst, mayfield and
-  added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment
-  pipeline.
+description: >-
+  Teambridge is an AI-native workforce-management platform for frontline and hourly
+  teams, unifying scheduling, time tracking, instant pay, team communication,
+  onboarding, compliance, and payroll behind autonomous AI agents. For integrators
+  it publishes the Teambridge External API, a unified Collections API (OpenAPI 3.1.0)
+  that reads and writes shifts, users, placements, locations, and custom collections,
+  authenticated with OAuth 2.0 client credentials and complemented by HMAC-signed
+  outbound webhooks for real-time change notification. Teambridge is backed by
+  General Catalyst and Mayfield and reports SOC 2 Type II, ISO 27001, HIPAA, and
+  GDPR compliance.
 url: https://raw.githubusercontent.com/api-evangelist/teambridge/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -13,10 +33,210 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-21'
 tags:
 - Company
-apis: []
+- Workforce Management
+- Scheduling
+- Time Tracking
+- Payroll
+- HR
+- Frontline
+- Webhooks
+apis:
+- aid: teambridge:teambridge-collections-unified-api-api
+  name: Teambridge Collections (Unified API) API
+  description: >-
+    **Powerful generic endpoints** for reading and writing any collection type.
+
+    Works with all collections using field UUIDs. Query `/fields` first to
+
+    discover the schema, then use these endpoints for flexible data access across
+
+    all collection types (shifts, users, placements, locations, custom collections, etc.).
+
+
+    ## Filtering
+
+
+    The unified Collections API (`/v1/collections/{collectionId}/records`) supports powerful filtering
+    via query parameters.
+
+    You can filter records by adding query parameters in the format `{fieldUUID}_{operator}={value}`.
+
+
+    **Supported Operators:**
+
+    - `_is`: Exact match (all field types) - **default if no suffix provided**
+
+    - `_contains`: Partial text match (TEXT fields only)
+
+    - `_gt`: Greater than (NUMBER, DATETIME fields)
+
+    - `_gte`: Greater than or equal (NUMBER, DATETIME fields)
+
+    - `_lt`: Less than (NUMBER, DATETIME fields)
+
+    - `_lte`: Less than or equal (NUMBER, DATETIME fields)
+
+
+    **Filtering Features:**
+
+    - **Multiple filters**: Up to 10 filters per request with implicit AND logic (all must match)
+
+    - **Default operator**: Parameters without a suffix default to `_is` behavior
+
+    - **Multiple operators on same field**: Allowed (e.g., `age_gte=21&age_lte=65` for range queries)
+
+    - **Case-insensitive**: TEXT and SELECT field matching is case-insensitive
+
+    - **Smart date handling**: DATETIME fields support both date-only (`2025-01-01`) and full ISO 8601
+    format (`2025-01-01T14:30:00Z`)
+
+
+    **Reserved Parameters**: The following parameter names are reserved and cannot be used as filter bases:
+    `page`, `size`, `limit`, `offset`.
+
+
+    **Filtering Examples:**
+
+    - Single filter (exact match): `?550e8400-..._is=john@example.com`
+
+    - Default operator (no suffix): `?550e8400-...=john@example.com` (equivalent to `_is`)
+
+    - Partial text match: `?550e8400-..._contains=john`
+
+    - Date exact match: `?abc123-..._is=2025-12-01`
+
+    - Date range: `?abc123-..._gte=2025-01-01&abc123-..._lte=2025-12-31`
+
+    - Number range: `?age-uuid-..._gte=21&age-uuid-..._lte=65`
+
+    - Multiple fields: `?550e8400-..._is=john@example.com&7c9e6679-..._is=active`
+
+    - Mixed operators: `?name-uuid-..._contains=john&age-uuid-..._gte=21`
+  humanURL: https://docs.teambridge.com
+  baseURL: https://open-api.teambridge.com
+  tags:
+  - Collections (Unified API)
+  properties:
+  - type: OpenAPI
+    url: openapi/teambridge-collections-unified-api-api-openapi.yml
+  - type: Documentation
+    url: https://docs.teambridge.com
+  - type: APIReference
+    url: https://docs.teambridge.com
+  - type: Authentication
+    url: authentication/teambridge-authentication.yml
+  - type: OAuthScopes
+    url: scopes/teambridge-scopes.yml
+  - type: Conventions
+    url: conventions/teambridge-conventions.yml
+  - type: ErrorCatalog
+    url: errors/teambridge-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/teambridge-webhooks.yml
+  - type: Lifecycle
+    url: lifecycle/teambridge-lifecycle.yml
+  - type: Conformance
+    url: conformance/teambridge-conformance.yml
+  - type: DataModel
+    url: data-model/teambridge-data-model.yml
+- aid: teambridge:teambridge-documents-api
+  name: Teambridge Documents API
+  description: Endpoints for uploading and managing documents.
+  humanURL: https://docs.teambridge.com
+  baseURL: https://open-api.teambridge.com
+  tags:
+  - Documents
+  properties:
+  - type: OpenAPI
+    url: openapi/teambridge-documents-api-openapi.yml
+  - type: Documentation
+    url: https://docs.teambridge.com
+  - type: APIReference
+    url: https://docs.teambridge.com
+  - type: Authentication
+    url: authentication/teambridge-authentication.yml
+  - type: OAuthScopes
+    url: scopes/teambridge-scopes.yml
+  - type: Conventions
+    url: conventions/teambridge-conventions.yml
+  - type: ErrorCatalog
+    url: errors/teambridge-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/teambridge-webhooks.yml
+  - type: Lifecycle
+    url: lifecycle/teambridge-lifecycle.yml
+  - type: Conformance
+    url: conformance/teambridge-conformance.yml
+  - type: DataModel
+    url: data-model/teambridge-data-model.yml
+- aid: teambridge:teambridge-mappings-api
+  name: Teambridge Mappings API
+  description: >-
+    Endpoints for managing external system mappings. Mappings link Teambridge records
+
+    to entities in external systems (like Bullhorn, ADP, etc.) by storing the external
+
+    provider code, external ID, and object type.
+  humanURL: https://docs.teambridge.com
+  baseURL: https://open-api.teambridge.com
+  tags:
+  - Mappings
+  properties:
+  - type: OpenAPI
+    url: openapi/teambridge-mappings-api-openapi.yml
+  - type: Documentation
+    url: https://docs.teambridge.com
+  - type: APIReference
+    url: https://docs.teambridge.com
+  - type: Authentication
+    url: authentication/teambridge-authentication.yml
+  - type: OAuthScopes
+    url: scopes/teambridge-scopes.yml
+  - type: Conventions
+    url: conventions/teambridge-conventions.yml
+  - type: ErrorCatalog
+    url: errors/teambridge-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/teambridge-webhooks.yml
+  - type: Lifecycle
+    url: lifecycle/teambridge-lifecycle.yml
+  - type: Conformance
+    url: conformance/teambridge-conformance.yml
+  - type: DataModel
+    url: data-model/teambridge-data-model.yml
+- aid: teambridge:teambridge-utilities-api
+  name: Teambridge Utilities API
+  description: Utility endpoints for timezone information and other general-purpose data.
+  humanURL: https://docs.teambridge.com
+  baseURL: https://open-api.teambridge.com
+  tags:
+  - Utilities
+  properties:
+  - type: OpenAPI
+    url: openapi/teambridge-utilities-api-openapi.yml
+  - type: Documentation
+    url: https://docs.teambridge.com
+  - type: APIReference
+    url: https://docs.teambridge.com
+  - type: Authentication
+    url: authentication/teambridge-authentication.yml
+  - type: OAuthScopes
+    url: scopes/teambridge-scopes.yml
+  - type: Conventions
+    url: conventions/teambridge-conventions.yml
+  - type: ErrorCatalog
+    url: errors/teambridge-problem-types.yml
+  - type: Webhooks
+    url: asyncapi/teambridge-webhooks.yml
+  - type: Lifecycle
+    url: lifecycle/teambridge-lifecycle.yml
+  - type: Conformance
+    url: conformance/teambridge-conformance.yml
+  - type: DataModel
+    url: data-model/teambridge-data-model.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -25,3 +245,56 @@ maintainers:
 common:
 - type: Website
   url: https://teambridge.com
+- type: DeveloperPortal
+  url: https://docs.teambridge.com
+- type: Documentation
+  url: https://docs.teambridge.com
+- type: APIReference
+  url: https://docs.teambridge.com
+- type: Authentication
+  url: authentication/teambridge-authentication.yml
+- type: OAuthScopes
+  url: scopes/teambridge-scopes.yml
+- type: Conventions
+  url: conventions/teambridge-conventions.yml
+- type: ErrorCatalog
+  url: errors/teambridge-problem-types.yml
+- type: Webhooks
+  url: asyncapi/teambridge-webhooks.yml
+- type: Lifecycle
+  url: lifecycle/teambridge-lifecycle.yml
+- type: Conformance
+  url: conformance/teambridge-conformance.yml
+- type: Compliance
+  url: https://security.teambridge.com/
+- type: DataModel
+  url: data-model/teambridge-data-model.yml
+- type: Overlay
+  url: overlays/teambridge-external-api-overlay.yaml
+- type: MCPServer
+  url: mcp/teambridge-mcp.yml
+- type: LLMsTxt
+  url: llms/teambridge-llms.txt
+- type: AgentSkill
+  url: skills/_index.yml
+- type: TrustCenter
+  url: security/teambridge-trust-center.yml
+- type: DomainSecurity
+  url: security/teambridge-domain-security.yml
+- type: Pricing
+  url: https://teambridge.com/pricing
+- type: Blog
+  url: https://teambridge.com/blog
+- type: Login
+  url: https://app.teambridge.com
+- type: SignUp
+  url: https://teambridge.com/book-demo
+- type: TermsOfService
+  url: https://teambridge.com/terms-of-use
+- type: PrivacyPolicy
+  url: https://teambridge.com/privacy-policy
+x-enrichment:
+  date: '2026-07-21'
+  status: enriched
+  artifacts_added: 16
+  pass: local-v1

@@ -1,0 +1,47 @@
+# Teambridge
+
+> Teambridge is an AI-native workforce-management platform for frontline teams, covering scheduling, time tracking, instant pay, onboarding, compliance, and payroll. Its External API is a unified Collections API (OpenAPI 3.1.0) over shifts, users, placements, locations, and custom collections, authenticated with OAuth 2.0 client credentials, with HMAC-signed outbound webhooks for real-time change notification.
+
+## API
+- [Teambridge External API docs](https://docs.teambridge.com): Redocly-hosted reference for the unified Collections API.
+- Base URL: https://open-api.teambridge.com
+- Authentication: OAuth 2.0 Client Credentials; token URL https://teambridge.us.auth0.com/oauth/token (scope: write).
+
+## Specs
+- [OpenAPI (harvested)](openapi/teambridge-openapi-original.json): OpenAPI 3.1.0, 12 operations across Collections, Documents, Mappings, Utilities.
+
+## Operations
+- listCollections — GET /v1/collections
+- listFields — GET /v1/collections/{collectionId}/fields
+- listRecords — GET /v1/collections/{collectionId}/records (offset pagination: page, size≤50; up to 10 filters)
+- getRecord — GET /v1/collections/{collectionId}/records/{recordId}
+- createRecord — POST /v1/collections/{collectionId}/records
+- updateRecord — PUT /v1/collections/{collectionId}/records/{recordId}
+- listMappings / createMapping / updateMapping / deleteMapping — /v1/mappings (link records to Bullhorn, ADP, etc.)
+- POST /v1/documents — upload a document (max 100MB)
+- GET /v1/timezones — supported timezones
+
+## Events
+- [Webhooks](asyncapi/teambridge-webhooks.yml): outbound HTTPS webhooks, HMAC-SHA256 signed (X-Webhook-Signature over {timestamp}.{body}), snake_case event_type (e.g. shift_created, user_updated, location_deleted); event_id for idempotent consumer processing.
+
+## Conventions & Semantics
+- [Conventions](conventions/teambridge-conventions.yml): auth, offset pagination, filtering operators, response envelope, ISO 8601 dates.
+- [Error catalog](errors/teambridge-problem-types.yml): {data,error} envelope; 400/401/404/500.
+- [Authentication](authentication/teambridge-authentication.yml)
+- [OAuth scopes](scopes/teambridge-scopes.yml)
+- [Data model](data-model/teambridge-data-model.yml)
+- [Lifecycle](lifecycle/teambridge-lifecycle.yml)
+- [Conformance](conformance/teambridge-conformance.yml)
+
+## Security & Compliance
+- [Trust center](https://security.teambridge.com/): SOC 2 Type II, ISO 27001, HIPAA, GDPR.
+- [Domain security](security/teambridge-domain-security.yml)
+
+## Docs
+- [Homepage](https://teambridge.com)
+- [Documentation](https://docs.teambridge.com)
+- [Pricing](https://teambridge.com/pricing)
+- [Blog](https://teambridge.com/blog)
+- [Book a demo](https://teambridge.com/book-demo)
+- [Terms of Use](https://teambridge.com/terms-of-use)
+- [Privacy Policy](https://teambridge.com/privacy-policy)

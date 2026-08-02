@@ -1,0 +1,53 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/teambridge-openapi-original.json
+format: envelope
+envelope:
+  shape: '{ "data": null, "error": <string | { message, code }> }'
+  variants:
+    - name: GenericErrorResponse
+      error: string
+      example: 'The page size exceeds the limit of 50'
+    - name: StandardErrorResponse
+      error: '{ message: string (human-readable), code: string (machine-readable) }'
+  note: >-
+    Teambridge does not use RFC 9457 application/problem+json. Errors are returned
+    in the standard response envelope with data=null and a populated error field.
+problems:
+  - status: 400
+    title: Bad Request / Validation Error
+    meaning: Invalid request parameters or body (e.g. page size over the limit of 50, malformed filter).
+    envelope: GenericErrorResponse | StandardErrorResponse
+    source_operations:
+      - openapi/teambridge-openapi-original.json#listRecords
+      - openapi/teambridge-openapi-original.json#createRecord
+      - openapi/teambridge-openapi-original.json#updateRecord
+      - openapi/teambridge-openapi-original.json#createMapping
+      - openapi/teambridge-openapi-original.json#updateMapping
+  - status: 401
+    title: Unauthorized
+    meaning: Missing, invalid, or expired OAuth 2.0 client-credentials access token.
+    remediation: Obtain a fresh token from https://teambridge.us.auth0.com/oauth/token and retry.
+    envelope: StandardErrorResponse
+    source_operations:
+      - openapi/teambridge-openapi-original.json#listFields
+      - openapi/teambridge-openapi-original.json#listRecords
+      - openapi/teambridge-openapi-original.json#getRecord
+      - openapi/teambridge-openapi-original.json#createRecord
+      - openapi/teambridge-openapi-original.json#updateRecord
+      - openapi/teambridge-openapi-original.json#listMappings
+      - openapi/teambridge-openapi-original.json#createMapping
+  - status: 404
+    title: Not Found
+    meaning: The referenced collection, record, or mapping does not exist.
+    envelope: StandardErrorResponse
+    source_operations:
+      - openapi/teambridge-openapi-original.json#listFields
+      - openapi/teambridge-openapi-original.json#getRecord
+      - openapi/teambridge-openapi-original.json#updateRecord
+      - openapi/teambridge-openapi-original.json#updateMapping
+      - openapi/teambridge-openapi-original.json#deleteMapping
+  - status: 500
+    title: Server Error
+    meaning: Internal server error. For webhook delivery, a 500 from the consumer endpoint triggers Teambridge retries.
+    envelope: StandardErrorResponse

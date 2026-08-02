@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/teambridge-openapi-original.json
+schemes:
+- name: OAuth2
+  source: openapi/teambridge-openapi-original.json
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://teambridge.us.auth0.com/oauth/token
+scopes:
+- scope: write
+  description: Full access
+  flows:
+  - clientCredentials
+  sources:
+  - openapi/teambridge-openapi-original.json

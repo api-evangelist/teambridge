@@ -1,0 +1,16 @@
+generated: '2026-07-21'
+method: generated
+source: openapi/teambridge-openapi-original.json
+skills:
+  - file: teambridge-read-collection-records.md
+    name: Read Teambridge collection records
+    api: openapi/teambridge-openapi-original.json
+    operations: [listCollections, listFields, listRecords, getRecord]
+  - file: teambridge-sync-external-mappings.md
+    name: Create records and sync external mappings
+    api: openapi/teambridge-openapi-original.json
+    operations: [createRecord, listMappings, createMapping, updateMapping, deleteMapping]
+  - file: teambridge-consume-webhooks.md
+    name: Consume and verify Teambridge webhooks
+    api: openapi/teambridge-openapi-original.json
+    operations: [getRecord]

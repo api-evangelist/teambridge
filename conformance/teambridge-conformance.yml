@@ -1,0 +1,35 @@
+generated: '2026-07-21'
+method: searched
+source:
+  - openapi/teambridge-openapi-original.json
+  - https://security.teambridge.com/
+standards:
+  - id: oauth2
+    conforms: true
+    evidence: OpenAPI securityScheme type oauth2, clientCredentials flow (Auth0 tokenUrl)
+  - id: oauth2-client-credentials
+    conforms: true
+    evidence: flows.clientCredentials with tokenUrl https://teambridge.us.auth0.com/oauth/token
+  - id: openapi-3.1
+    conforms: true
+    evidence: spec declares openapi 3.1.0
+  - id: iso8601-datetime
+    conforms: true
+    evidence: all date-time fields use ISO 8601 with timezone
+  - id: hmac-webhook-signatures
+    conforms: true
+    evidence: webhook requests signed HMAC-SHA256 over {timestamp}.{body}, X-Webhook-Signature
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: errors use a {data,error} envelope, not application/problem+json
+  - id: rfc8594-sunset
+    conforms: false
+    evidence: no Sunset/Deprecation header policy published
+compliance:
+  program_url: https://security.teambridge.com/
+  certifications:
+    - SOC 2 Type II
+    - ISO 27001
+    - HIPAA
+    - GDPR
+  source: security/teambridge-trust-center.yml

@@ -1,0 +1,47 @@
+generated: '2026-07-21'
+method: searched
+source: https://docs.teambridge.com
+spec_type: Webhooks
+summary: >-
+  Teambridge delivers outbound webhooks for real-time notification of data changes
+  across collections (shifts, users, locations, and custom records). A single
+  unified eventNotification payload is POSTed to a subscriber's HTTPS endpoint,
+  authenticated with an HMAC-SHA256 signature. Account owners configure outbound
+  webhook subscriptions under Settings > Account | Outbound webhooks.
+transport: https-post
+configuration: Settings > Account > Outbound webhooks (account owners)
+security:
+  scheme: HMAC-SHA256
+  signature_header: X-Webhook-Signature
+  signature_format: 'sha256={hex_signature}'
+  signed_payload: '{timestamp}.{rawBody}'
+  timestamp_header: X-Webhook-Timestamp
+  replay_protection: reject requests with timestamp older than 5 minutes (300s)
+  secret: per-subscription HMAC secret shown once at creation; rotatable
+delivery:
+  retries: true
+  retry_trigger: non-2xx / 500 response from consumer endpoint
+payload:
+  version: '1.0'
+  required_fields: [version, event_type, event_id, timestamp, account_id, data]
+  event_id: UUID, unique per event, intended for idempotent consumer processing
+  event_type: snake_case, formed as <collection>_<action> (e.g. shift_created)
+  data_fields: [action, collection_id, record_id, actor]
+  actions: [created, updated, deleted]
+event_types:
+  naming: snake_case, <collection>_<action>
+  documented_examples:
+    - shift_created
+    - shift_updated
+    - user_created
+    - user_updated
+    - location_deleted
+  note: >-
+    Events are emitted for any subscribed collection; the concrete event_type is the
+    collection name plus the action (created/updated/deleted). The examples above are
+    those explicitly named in the documentation; the full set depends on subscribed
+    collections.
+follow_up:
+  pattern: >-
+    On receipt, use data.collection_id + data.record_id with
+    GET /v1/collections/{collectionId}/records/{recordId} to fetch full record data.

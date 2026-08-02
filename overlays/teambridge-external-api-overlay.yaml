@@ -1,0 +1,26 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for Teambridge External API
+  version: 1.0.0
+extends: openapi/teambridge-openapi-original.json
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-rating: 3
+      x-apievangelist-provider: teambridge
+      x-apievangelist-base-url: https://open-api.teambridge.com
+      x-apievangelist-artifacts:
+        authentication: authentication/teambridge-authentication.yml
+        scopes: scopes/teambridge-scopes.yml
+        conventions: conventions/teambridge-conventions.yml
+        errors: errors/teambridge-problem-types.yml
+        webhooks: asyncapi/teambridge-webhooks.yml
+        lifecycle: lifecycle/teambridge-lifecycle.yml
+        conformance: conformance/teambridge-conformance.yml
+        data_model: data-model/teambridge-data-model.yml
+  - target: $.info
+    update:
+      x-apievangelist-note: >-
+        Two operations in the harvested spec (GET /v1/timezones, POST /v1/documents)
+        are missing operationId values; recommend adding listTimezones and
+        createDocument respectively for agent-native tooling.

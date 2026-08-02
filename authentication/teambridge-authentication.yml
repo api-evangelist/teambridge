@@ -1,0 +1,33 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/teambridge-openapi-original.json
+summary:
+  types:
+  - apiKey
+  - oauth2
+  api_key_in:
+  - header
+  oauth2_flows:
+  - clientCredentials
+schemes:
+- name: OAuth2
+  type: oauth2
+  flows:
+  - flow: clientCredentials
+    tokenUrl: https://teambridge.us.auth0.com/oauth/token
+    scopes: 1
+  sources:
+  - openapi/teambridge-openapi-original.json
+- name: WebhookSignature
+  type: apiKey
+  in: header
+  parameter: X-Webhook-Signature
+  description: |-
+    HMAC-SHA256 signature for webhook authentication. The signature is computed from
+    the concatenation of the timestamp and request body: `{timestamp}.{body}`.
+    The signature header value includes the scheme prefix: `sha256={hex_signature}`.
+
+    Webhook consumers must verify this signature using their webhook secret to ensure
+    the request originated from Teambridge.
+  sources:
+  - openapi/teambridge-openapi-original.json

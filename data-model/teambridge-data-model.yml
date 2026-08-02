@@ -1,0 +1,58 @@
+generated: '2026-07-21'
+method: derived
+source: openapi/teambridge-openapi-original.json
+summary: >-
+  Entity-relationship graph derived from the Teambridge External API OpenAPI. The
+  API is a unified Collections model: a Collection defines Fields and holds Records;
+  Records can be linked to external systems via Mappings; Documents are uploaded
+  files. Standard collections include shifts, users, placements, and locations,
+  alongside customer-defined custom collections.
+entities:
+  - name: Collection
+    id_field: collectionId
+    id_format: uuid
+    description: A typed set of records (e.g. shifts, users, placements, locations, or a custom collection).
+    schema: Collection
+  - name: Field
+    description: A field/column definition belonging to a collection, with type metadata and select options.
+    schema: Field
+  - name: Record
+    id_field: recordId
+    id_format: uuid
+    description: An individual record within a collection; its data conforms to the collection's fields.
+    schema: RecordData
+  - name: Mapping
+    id_field: mappingId
+    id_format: uuid
+    description: Links a Teambridge record to an external system record (e.g. Bullhorn, ADP).
+    schema: MappingDto
+  - name: Document
+    description: An uploaded file (max 100MB) associated with the account.
+    schema: CreateDocumentResponse
+relationships:
+  - from: Collection
+    to: Field
+    type: has_many
+    via: collectionId
+    evidence: GET /v1/collections/{collectionId}/fields
+  - from: Collection
+    to: Record
+    type: has_many
+    via: collectionId
+    evidence: GET/POST /v1/collections/{collectionId}/records
+  - from: Record
+    to: Collection
+    type: belongs_to
+    via: collectionId
+  - from: Mapping
+    to: Record
+    type: belongs_to
+    via: record_id / collection_id
+    evidence: externalRecordMappings surfaced via ?enriched=true; mappings link records to external systems
+  - from: Record
+    to: Mapping
+    type: has_many
+    via: externalRecordMappings (metadata)
+external_systems:
+  - Bullhorn
+  - ADP
