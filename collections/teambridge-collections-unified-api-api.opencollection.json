@@ -1,0 +1,179 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Collections (Unified API) API",
+    "version": "0.1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Collections (Unified API)",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List collections",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://open-api.teambridge.com/v1/collections"
+          },
+          "docs": "Returns metadata about all collections for the account associated with the provided access token."
+        },
+        {
+          "info": {
+            "name": "Retrieve field metadata for a collection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://open-api.teambridge.com/v1/collections/:collectionId/fields",
+            "params": [
+              {
+                "name": "collectionId",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the collection"
+              }
+            ]
+          },
+          "docs": "Returns all field definitions for a collection, including field identifiers, names,\ntypes, write format hints, select options (for native selects), and linked collection IDs\n(for link-to-object fields). Use this endpoint to discover the schema before reading or writing records.\n"
+        },
+        {
+          "info": {
+            "name": "List records in a collection",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://open-api.teambridge.com/v1/collections/:collectionId/records",
+            "params": [
+              {
+                "name": "collectionId",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the collection"
+              },
+              {
+                "name": "page",
+                "value": "",
+                "type": "query",
+                "description": "Zero-based page index"
+              },
+              {
+                "name": "size",
+                "value": "",
+                "type": "query",
+                "description": "Number of records per page (maximum 50)"
+              },
+              {
+                "name": "enriched",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, each record's `metadata` object will include an `externalRecordMappings` array\ncontaining any external ID mappings linked to that record (e.g. from Bullhorn, ADP).\nIf no mappings exist the array will be empty. Has no effect on the `data` fields.\n"
+              }
+            ]
+          },
+          "docs": "Returns a paginated list of records for a collection. Each record is represented\nas a map of field UUIDs to values. Use the /fields endpoint first to get field metadata\n(names, types, write format hints) to interpret the data.\n\n**Filtering Support:**\nThis endpoint supports filtering via query parameters in the format `{fieldUUID}_{operator}={value}`.\n- Up to 10 filters per request with implicit AND logic (all filters must match)\n- Use the /fields endpoint to discover field UUIDs\n- See the API de"
+        },
+        {
+          "info": {
+            "name": "Create a new record",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://open-api.teambridge.com/v1/collections/:collectionId/records",
+            "params": [
+              {
+                "name": "collectionId",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the collection"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Creates a new record in the collection. The request body should contain a map\nof field UUIDs to string values. Use the /fields endpoint to discover field IDs\nand their expected write formats (writeFormatHint).\n"
+        },
+        {
+          "info": {
+            "name": "Get a single record by ID",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://open-api.teambridge.com/v1/collections/:collectionId/records/:recordId",
+            "params": [
+              {
+                "name": "collectionId",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the collection"
+              },
+              {
+                "name": "recordId",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the record"
+              },
+              {
+                "name": "enriched",
+                "value": "",
+                "type": "query",
+                "description": "When `true`, the `metadata` object will include an `externalRecordMappings` array\ncontaining any external ID mappings linked to this record (e.g. from Bullhorn, ADP).\nIf no mappings exist the array will be empty. Has no effect on the `data` fields.\n"
+              }
+            ]
+          },
+          "docs": "Returns a single record identified by its UUID. The record is represented as\na map of field UUIDs to values. Use the /fields endpoint to get field metadata.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing record",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://open-api.teambridge.com/v1/collections/:collectionId/records/:recordId",
+            "params": [
+              {
+                "name": "collectionId",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the collection"
+              },
+              {
+                "name": "recordId",
+                "value": "",
+                "type": "path",
+                "description": "Unique ID of the record to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            }
+          },
+          "docs": "Updates an existing record. The request body should contain a map of field UUIDs\nto string values for the fields you want to update. Only include fields that need\nto be changed. Use the /fields endpoint to discover field IDs and write formats.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

@@ -1,0 +1,64 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Documents API",
+    "version": "0.1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Documents",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Upload a document",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://open-api.teambridge.com/v1/documents",
+            "body": {
+              "type": "multipart-form",
+              "data": [
+                {
+                  "name": "file",
+                  "type": "text",
+                  "value": ""
+                },
+                {
+                  "name": "request",
+                  "type": "text",
+                  "value": ""
+                }
+              ]
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Uploads a document file with optional metadata for the authenticated account.\n\n**Important**: This endpoint requires `multipart/form-data` content type for file upload.\n\n**Limits**:\n- Maximum file size: 100MB\n- Maximum roles per document: 10\n\nThe request consists of two parts:\n- `file`: The document file to upload (required)\n- `request`: JSON metadata for the document (optional)\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

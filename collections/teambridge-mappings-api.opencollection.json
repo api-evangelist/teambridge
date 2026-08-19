@@ -1,0 +1,141 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Mappings API",
+    "version": "0.1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Mappings",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "List all mappings for a record",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://open-api.teambridge.com/v1/mappings",
+            "params": [
+              {
+                "name": "recordId",
+                "value": "",
+                "type": "query",
+                "description": "UUID of the Teambridge record to get mappings for"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns all external system mappings for a specific Teambridge record.\nMappings link records to external system entities.\n"
+        },
+        {
+          "info": {
+            "name": "Create a new mapping",
+            "type": "http"
+          },
+          "http": {
+            "method": "POST",
+            "url": "https://open-api.teambridge.com/v1/mappings",
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Creates a new mapping linking a Teambridge record to an external system entity.\nEach mapping associates a record with an external provider, external ID, and object type.\n"
+        },
+        {
+          "info": {
+            "name": "Update an existing mapping",
+            "type": "http"
+          },
+          "http": {
+            "method": "PUT",
+            "url": "https://open-api.teambridge.com/v1/mappings/:mappingId",
+            "params": [
+              {
+                "name": "mappingId",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the mapping to update"
+              }
+            ],
+            "body": {
+              "type": "json",
+              "data": "{}"
+            },
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Updates the external ID for an existing mapping. This is useful when the\nexternal system ID changes but the mapping relationship should be preserved.\n"
+        },
+        {
+          "info": {
+            "name": "Delete a mapping",
+            "type": "http"
+          },
+          "http": {
+            "method": "DELETE",
+            "url": "https://open-api.teambridge.com/v1/mappings/:mappingId",
+            "params": [
+              {
+                "name": "mappingId",
+                "value": "",
+                "type": "path",
+                "description": "UUID of the mapping to delete"
+              }
+            ],
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Deletes an external system mapping. This removes the link between a Teambridge\nrecord and an external system entity without affecting the underlying record.\n"
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

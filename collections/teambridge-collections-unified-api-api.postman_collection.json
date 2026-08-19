@@ -1,0 +1,1621 @@
+{
+  "item": [
+    {
+      "id": "44a3f85c-a02e-47c9-a04b-74d73a2c74af",
+      "name": "Collections (Unified API)",
+      "description": {
+        "content": "**Powerful generic endpoints** for reading and writing any collection type.\nWorks with all collections using field UUIDs. Query `/fields` first to\ndiscover the schema, then use these endpoints for flexible data access across\nall collection types (shifts, users, placements, locations, custom collections, etc.).\n\n## Filtering\n\nThe unified Collections API (`/v1/collections/{collectionId}/records`) supports powerful filtering via query parameters.\nYou can filter records by adding query parameters in the format `{fieldUUID}_{operator}={value}`.\n\n**Supported Operators:**\n- `_is`: Exact match (all field types) - **default if no suffix provided**\n- `_contains`: Partial text match (TEXT fields only)\n- `_gt`: Greater than (NUMBER, DATETIME fields)\n- `_gte`: Greater than or equal (NUMBER, DATETIME fields)\n- `_lt`: Less than (NUMBER, DATETIME fields)\n- `_lte`: Less than or equal (NUMBER, DATETIME fields)\n\n**Filtering Features:**\n- **Multiple filters**: Up to 10 filters per request with implicit AND logic (all must match)\n- **Default operator**: Parameters without a suffix default to `_is` behavior\n- **Multiple operators on same field**: Allowed (e.g., `age_gte=21&age_lte=65` for range queries)\n- **Case-insensitive**: TEXT and SELECT field matching is case-insensitive\n- **Smart date handling**: DATETIME fields support both date-only (`2025-01-01`) and full ISO 8601 format (`2025-01-01T14:30:00Z`)\n\n**Reserved Parameters**: The following parameter names are reserved and cannot be used as filter bases: `page`, `size`, `limit`, `offset`.\n\n**Filtering Examples:**\n- Single filter (exact match): `?550e8400-..._is=john@example.com`\n- Default operator (no suffix): `?550e8400-...=john@example.com` (equivalent to `_is`)\n- Partial text match: `?550e8400-..._contains=john`\n- Date exact match: `?abc123-..._is=2025-12-01`\n- Date range: `?abc123-..._gte=2025-01-01&abc123-..._lte=2025-12-31`\n- Number range: `?age-uuid-..._gte=21&age-uuid-..._lte=65`\n- Multiple fields: `?550e8400-..._is=john@example.com&7c9e6679-..._is=active`\n- Mixed operators: `?name-uuid-..._contains=john&age-uuid-..._gte=21`\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "c90527e1-f194-4353-8f16-bc9d3ca5fedf",
+          "name": "List collections",
+          "request": {
+            "name": "List collections",
+            "description": {
+              "content": "Returns metadata about all collections for the account associated with the provided access token.",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "collections"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "475595c1-4ada-4646-809d-ff852991a60c",
+              "name": "List of collections",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"metadata\": {\n    \"accountId\": \"5cc93592-f196-42ca-343b-0d9112f43032\",\n    \"count\": 1\n  },\n  \"collections\": [\n    {\n      \"id\": \"533501e1-5922-ce93-6882-b3f4cfcec577\",\n      \"name\": \"Shifts\"\n    },\n    {\n      \"id\": \"feb46053-be54-9883-868a-b17519f4a0a7\",\n      \"name\": \"Shifts\"\n    }\n  ]\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "11f8cbf1-cb5e-4c8a-b533-163e3c8516a6",
+          "name": "Retrieve field metadata for a collection",
+          "request": {
+            "name": "Retrieve field metadata for a collection",
+            "description": {
+              "content": "Returns all field definitions for a collection, including field identifiers, names,\ntypes, write format hints, select options (for native selects), and linked collection IDs\n(for link-to-object fields). Use this endpoint to discover the schema before reading or writing records.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "collections",
+                ":collectionId",
+                "fields"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "collectionId",
+                  "description": "(Required) Unique ID of the collection"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "20038d42-1865-4339-acbc-605d996d026d",
+              "name": "List of field definitions",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "fields"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"id\": \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\",\n      \"name\": \"First Name\",\n      \"readOnly\": false,\n      \"type\": \"TEXT\",\n      \"writeFormatHint\": \"plain_text\"\n    },\n    {\n      \"id\": \"df14fac6-ce85-480b-a5a8-0e5b90471205\",\n      \"name\": \"Last Name\",\n      \"readOnly\": false,\n      \"type\": \"TEXT\",\n      \"writeFormatHint\": \"plain_text\"\n    },\n    {\n      \"id\": \"199c7b23-5ba6-4cf4-a778-6da9394b7884\",\n      \"name\": \"Email\",\n      \"readOnly\": false,\n      \"type\": \"EMAIL\",\n      \"writeFormatHint\": \"email\"\n    },\n    {\n      \"id\": \"f7958d78-9e4c-4d23-a16e-ac732636b281\",\n      \"name\": \"Phone\",\n      \"readOnly\": false,\n      \"type\": \"PHONE\",\n      \"writeFormatHint\": \"e164_phone\"\n    },\n    {\n      \"id\": \"7064ba02-0ba2-48ca-9d0d-3698630b0050\",\n      \"name\": \"Date of Birth\",\n      \"readOnly\": false,\n      \"type\": \"DATETIME\",\n      \"writeFormatHint\": \"iso8601_datetime\"\n    },\n    {\n      \"id\": \"39336d37-1d19-4b84-9bf9-6d8e88938558\",\n      \"name\": \"Certifications\",\n      \"readOnly\": false,\n      \"type\": \"LINK_TO_ROLE\",\n      \"writeFormatHint\": \"comma_separated_uuids\",\n      \"linkedCollectionId\": \"7822e1fa-dfde-4090-bf1e-bb41a31c763f\"\n    },\n    {\n      \"id\": \"e33d4a71-5140-4a30-afc7-567471a89c39\",\n      \"name\": \"Assigned Facilities\",\n      \"readOnly\": false,\n      \"type\": \"LINK_TO_LOCATION\",\n      \"writeFormatHint\": \"comma_separated_uuids\",\n      \"linkedCollectionId\": \"b8e9e5a9-074d-4df2-a95a-4c8dbd5d8781\"\n    },\n    {\n      \"id\": \"1d566c20-accd-450f-afad-8c572f176bd0\",\n      \"name\": \"Employment Status\",\n      \"readOnly\": false,\n      \"type\": \"SINGLE_SELECT\",\n      \"writeFormatHint\": \"single_uuid\",\n      \"selectOptions\": [\n        {\n          \"id\": \"bb31a869-2e73-4468-ab94-73ea256e08a2\",\n          \"name\": \"Full-Time\"\n        },\n        {\n          \"id\": \"68ddbd25-b819-4362-add1-9c87c079515c\",\n          \"name\": \"Part-Time\"\n        },\n        {\n          \"id\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\",\n          \"name\": \"Per Diem\"\n        }\n      ]\n    },\n    {\n      \"id\": \"5ef9a0a5-f7e5-42a7-af8c-927a9057c839\",\n      \"name\": \"Specialties\",\n      \"readOnly\": false,\n      \"type\": \"MULTI_SELECT\",\n      \"writeFormatHint\": \"comma_separated_uuids\",\n      \"selectOptions\": [\n        {\n          \"id\": \"641367e5-0c24-4eb4-8b32-eda6a87540f3\",\n          \"name\": \"ICU\"\n        },\n        {\n          \"id\": \"89667f7f-cc87-4246-9f10-e0cfe13fdd8c\",\n          \"name\": \"ER\"\n        },\n        {\n          \"id\": \"4374192c-ece1-4475-9372-23dbe0f98527\",\n          \"name\": \"Surgery\"\n        }\n      ]\n    },\n    {\n      \"id\": \"0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7\",\n      \"name\": \"Created At\",\n      \"readOnly\": true,\n      \"type\": \"COMPUTED\"\n    },\n    {\n      \"id\": \"a943302a-5b1e-4ba9-b4c0-728c8e7fe2bd\",\n      \"name\": \"Home Address\",\n      \"readOnly\": false,\n      \"type\": \"ADDRESS\",\n      \"writeFormatHint\": \"plain_text\"\n    }\n  ],\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ed9b9f57-3c3c-41c7-a974-2cb0a20c2e45",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "fields"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f498239d-dcb0-47b6-8d87-9a133149cd42",
+              "name": "Collection not found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "fields"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "a3e457b4-8d98-4d57-8ee4-54a1320577e8",
+          "name": "List records in a collection",
+          "request": {
+            "name": "List records in a collection",
+            "description": {
+              "content": "Returns a paginated list of records for a collection. Each record is represented\nas a map of field UUIDs to values. Use the /fields endpoint first to get field metadata\n(names, types, write format hints) to interpret the data.\n\n**Filtering Support:**\nThis endpoint supports filtering via query parameters in the format `{fieldUUID}_{operator}={value}`.\n- Up to 10 filters per request with implicit AND logic (all filters must match)\n- Use the /fields endpoint to discover field UUIDs\n- See the API description above for detailed filtering documentation and examples\n\n**Supported Operators by Field Type:**\n- **TEXT**: `_is` (exact), `_contains` (partial match)\n- **NUMBER**: `_is`, `_gt`, `_gte`, `_lt`, `_lte`\n- **DATETIME**: `_is`, `_gt`, `_gte`, `_lt`, `_lte`\n- **BOOLEAN**: `_is`\n- **SINGLE_SELECT/MULTI_SELECT**: `_is`\n- **LINK_TO_USER / LINK_TO_ROLE / LINK_TO_LOCATION / LINK_TO_JOB / LINK_TO_SHIFT / LINK_TO_PLACEMENT / LINK_TO_SHIFT_GROUP / LINK_TO_CONTACT / LINK_TO_TASK / CUSTOM_FIELD**: `_is` (pass the record ID of the linked record; returns records where that record is one of the field's selected values)\n- **Default**: No suffix defaults to `_is` behavior\n\n**Filter Examples:**\n- Filter by email: `?{email-field-uuid}_is=john@example.com`\n- Filter by partial name: `?{name-field-uuid}_contains=john`\n- Filter by date range: `?{date-field-uuid}_gte=2025-01-01&{date-field-uuid}_lte=2025-12-31`\n- Filter by age range: `?{age-field-uuid}_gte=21&{age-field-uuid}_lte=65`\n- Multiple filters: `?{field1-uuid}_is=value1&{field2-uuid}_contains=value2`\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "collections",
+                ":collectionId",
+                "records"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "page",
+                  "value": "0",
+                  "description": "(Required) Zero-based page index"
+                },
+                {
+                  "disabled": false,
+                  "key": "size",
+                  "value": "20",
+                  "description": "(Required) Number of records per page (maximum 50)"
+                },
+                {
+                  "disabled": false,
+                  "key": "enriched",
+                  "value": "false",
+                  "description": "When `true`, each record's `metadata` object will include an `externalRecordMappings` array\ncontaining any external ID mappings linked to that record (e.g. from Bullhorn, ADP).\nIf no mappings exist the array will be empty. Has no effect on the `data` fields.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "collectionId",
+                  "description": "(Required) Unique ID of the collection"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "2c6f635f-3558-429f-aff8-602a6bab3a45",
+              "name": "List of records in the collection",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "enriched",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"metadata\": {\n        \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\"\n      },\n      \"data\": {\n        \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n        \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n        \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\"\n      }\n    },\n    {\n      \"metadata\": {\n        \"recordId\": \"660e8400-e29b-41d4-a716-446655440001\"\n      },\n      \"data\": {\n        \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"John\",\n        \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Doe\",\n        \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"john.doe@hospital.com\"\n      }\n    }\n  ],\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "571437f6-ce12-41f0-880c-c440dddb99a0",
+              "name": "Bad request (e.g., page size exceeds maximum)",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "enriched",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": null,\n  \"error\": \"The page size exceeds the limit of 50\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "93b858e8-1f2c-4cf9-bf1c-5a13732faaa5",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "enriched",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "51a90ae4-4cfe-47fb-a34c-3f32710337cf",
+              "name": "Collection not found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "page",
+                      "value": "0"
+                    },
+                    {
+                      "key": "size",
+                      "value": "20"
+                    },
+                    {
+                      "key": "enriched",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "91069d54-284a-4bb1-9146-b89e9dde767f",
+          "name": "Create a new record",
+          "request": {
+            "name": "Create a new record",
+            "description": {
+              "content": "Creates a new record in the collection. The request body should contain a map\nof field UUIDs to string values. Use the /fields endpoint to discover field IDs\nand their expected write formats (writeFormatHint).\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "collections",
+                ":collectionId",
+                "records"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "collectionId",
+                  "description": "(Required) Unique ID of the collection"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"key_0\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "8a1bebd3-d97a-494b-bbf5-6b46bab3e74e",
+              "name": "Record created successfully",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": \"Resource created with ID: 123e4567-e89b-12d3-a456-426614174000\",\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "b82e12a7-1bf9-45b6-bade-dbfafae479e8",
+              "name": "Bad request (validation error, invalid field values, etc.)",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": null,\n  \"error\": \"The page size exceeds the limit of 50\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "2fe47aa1-68a9-4439-b3e3-fb3279505366",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "c890653a-d1d4-4081-b14b-68bdbb2a6c59",
+              "name": "Collection not found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "307c2c66-8ba1-4b55-82e4-1b730220f653",
+          "name": "Get a single record by ID",
+          "request": {
+            "name": "Get a single record by ID",
+            "description": {
+              "content": "Returns a single record identified by its UUID. The record is represented as\na map of field UUIDs to values. Use the /fields endpoint to get field metadata.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "collections",
+                ":collectionId",
+                "records",
+                ":recordId"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "enriched",
+                  "value": "false",
+                  "description": "When `true`, the `metadata` object will include an `externalRecordMappings` array\ncontaining any external ID mappings linked to this record (e.g. from Bullhorn, ADP).\nIf no mappings exist the array will be empty. Has no effect on the `data` fields.\n"
+                }
+              ],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "collectionId",
+                  "description": "(Required) Unique ID of the collection"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "recordId",
+                  "description": "(Required) Unique ID of the record"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": null
+          },
+          "response": [
+            {
+              "id": "1ae51bac-c98a-4362-b2e7-8d0c5b9888cd",
+              "name": "Record found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records",
+                    ":recordId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "enriched",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "recordId",
+                      "description": "(Required) Unique ID of the record"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"metadata\": {\n      \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\"\n    },\n    \"data\": {\n      \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n      \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n      \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n      \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\"\n    }\n  },\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "3c2d0b3f-9901-4113-8dc8-db0d13765619",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records",
+                    ":recordId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "enriched",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "recordId",
+                      "description": "(Required) Unique ID of the record"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "28e42057-c603-43fe-8e68-d12c0901bf4e",
+              "name": "Record or collection not found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records",
+                    ":recordId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "enriched",
+                      "value": "false"
+                    }
+                  ],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "recordId",
+                      "description": "(Required) Unique ID of the record"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "0645358c-41dd-4bd0-a508-e83d251367e5",
+          "name": "Update an existing record",
+          "request": {
+            "name": "Update an existing record",
+            "description": {
+              "content": "Updates an existing record. The request body should contain a map of field UUIDs\nto string values for the fields you want to update. Only include fields that need\nto be changed. Use the /fields endpoint to discover field IDs and write formats.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "collections",
+                ":collectionId",
+                "records",
+                ":recordId"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "collectionId",
+                  "description": "(Required) Unique ID of the collection"
+                },
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "recordId",
+                  "description": "(Required) Unique ID of the record to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": null,
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"data\": {\n    \"key_0\": \"<string>\"\n  }\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "9670c4fd-50f3-4dc9-b5fa-c78229100432",
+              "name": "Record updated successfully",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records",
+                    ":recordId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "recordId",
+                      "description": "(Required) Unique ID of the record to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"8d74ff97-4cb5-49c8-af77-a3d98af4b1c2\": false,\n    \"ade2b23c-6a3b-49fe-bc13-d37b0c39941c\": 1234,\n    \"0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7\": \"2024-01-15T10:30:00Z\"\n  },\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "c894cb08-1ad6-4be3-a096-3dedb6740166",
+              "name": "Bad request (validation error, invalid field values, etc.)",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records",
+                    ":recordId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "recordId",
+                      "description": "(Required) Unique ID of the record to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": null,\n  \"error\": \"The page size exceeds the limit of 50\"\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "d1da3298-68be-43ef-8913-5a86cb7e0d33",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records",
+                    ":recordId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "recordId",
+                      "description": "(Required) Unique ID of the record to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "bc650b17-145d-4d8c-992e-d2201f1129ed",
+              "name": "Record or collection not found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "collections",
+                    ":collectionId",
+                    "records",
+                    ":recordId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "collectionId",
+                      "description": "(Required) Unique ID of the collection"
+                    },
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "recordId",
+                      "description": "(Required) Unique ID of the record to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"data\": {\n    \"c5a8e667-fe00-4c18-a559-84bfdbf7e8d1\": \"Sarah\",\n    \"df14fac6-ce85-480b-a5a8-0e5b90471205\": \"Johnson\",\n    \"199c7b23-5ba6-4cf4-a778-6da9394b7884\": \"sarah.johnson@hospital.com\",\n    \"f7958d78-9e4c-4d23-a16e-ac732636b281\": \"+14155551234\",\n    \"7064ba02-0ba2-48ca-9d0d-3698630b0050\": \"1985-03-15T00:00:00Z\",\n    \"39336d37-1d19-4b84-9bf9-6d8e88938558\": \"bb31a869-2e73-4468-ab94-73ea256e08a2,68ddbd25-b819-4362-add1-9c87c079515c\",\n    \"1d566c20-accd-450f-afad-8c572f176bd0\": \"4bfabc6f-f512-4c48-849b-8c94b83c215e\"\n  }\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://open-api.teambridge.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "write"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://teambridge.us.auth0.com/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "6f671725-8e1a-4742-b2ec-0c0755b562fb",
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Collections (Unified API) API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "External API for Teambridge platform.\n\n**Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).\nExamples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).\n\n**Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.\n\n**Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.\n",
+      "type": "text/plain"
+    }
+  }
+}

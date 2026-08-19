@@ -1,0 +1,49 @@
+{
+  "opencollection": "1.0.0",
+  "info": {
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Utilities API",
+    "version": "0.1.0"
+  },
+  "request": {
+    "auth": {
+      "type": "oauth2",
+      "flow": "client_credentials",
+      "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+      "credentials": {
+        "clientId": "{{clientId}}",
+        "clientSecret": "{{clientSecret}}"
+      }
+    }
+  },
+  "items": [
+    {
+      "info": {
+        "name": "Utilities",
+        "type": "folder"
+      },
+      "items": [
+        {
+          "info": {
+            "name": "Get supported timezones",
+            "type": "http"
+          },
+          "http": {
+            "method": "GET",
+            "url": "https://open-api.teambridge.com/v1/timezones",
+            "auth": {
+              "type": "oauth2",
+              "flow": "client_credentials",
+              "accessTokenUrl": "https://teambridge.us.auth0.com/oauth/token",
+              "credentials": {
+                "clientId": "{{clientId}}",
+                "clientSecret": "{{clientSecret}}"
+              }
+            }
+          },
+          "docs": "Returns a list of all supported timezone identifiers, sorted alphabetically."
+        }
+      ]
+    }
+  ],
+  "bundled": true
+}

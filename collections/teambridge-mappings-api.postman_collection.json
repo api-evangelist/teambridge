@@ -1,0 +1,1027 @@
+{
+  "item": [
+    {
+      "id": "3173b161-7792-4786-b24c-bf329ee0b9b3",
+      "name": "Mappings",
+      "description": {
+        "content": "Endpoints for managing external system mappings. Mappings link Teambridge records\nto entities in external systems (like Bullhorn, ADP, etc.) by storing the external\nprovider code, external ID, and object type.\n",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "94ae35d7-5559-4738-87e9-eee85b987d29",
+          "name": "List all mappings for a record",
+          "request": {
+            "name": "List all mappings for a record",
+            "description": {
+              "content": "Returns all external system mappings for a specific Teambridge record.\nMappings link records to external system entities.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "mappings"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [
+                {
+                  "disabled": false,
+                  "key": "recordId",
+                  "value": "<uuid>",
+                  "description": "(Required) UUID of the Teambridge record to get mappings for"
+                }
+              ],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://teambridge.us.auth0.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "712a93f9-cd7c-4608-b596-940e3e9ba03b",
+              "name": "List of mappings for the record",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "recordId",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": [\n    {\n      \"mappingId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"providerCode\": \"BULLHORN\",\n      \"externalId\": \"EXT-12345\",\n      \"createdAt\": \"2025-01-15T10:30:00Z\",\n      \"externalObjectType\": \"Candidate\"\n    },\n    {\n      \"mappingId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n      \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n      \"providerCode\": \"BULLHORN\",\n      \"externalId\": \"EXT-12345\",\n      \"createdAt\": \"2025-01-15T10:30:00Z\",\n      \"externalObjectType\": \"Candidate\"\n    }\n  ],\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "e6805dc0-b7c6-45f5-aeff-ffec88360e97",
+              "name": "Bad request - missing or invalid recordId",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "recordId",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "90f7f68c-099c-41af-9de8-054973a1b47f",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [
+                    {
+                      "key": "recordId",
+                      "value": "<uuid>"
+                    }
+                  ],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "f290bf89-91b4-400e-8370-ecc9ff89d8de",
+          "name": "Create a new mapping",
+          "request": {
+            "name": "Create a new mapping",
+            "description": {
+              "content": "Creates a new mapping linking a Teambridge record to an external system entity.\nEach mapping associates a record with an external provider, external ID, and object type.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "mappings"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://teambridge.us.auth0.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"recordId\": \"<uuid>\",\n  \"providerCode\": \"<string>\",\n  \"externalId\": \"<string>\",\n  \"externalObjectType\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "cbe6cb34-0a51-40f9-97c6-515b94bab183",
+              "name": "Mapping created successfully",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"providerCode\": \"BULLHORN\",\n  \"externalId\": \"EXT-12345\",\n  \"externalObjectType\": \"Candidate\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"mappingId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"providerCode\": \"BULLHORN\",\n    \"externalId\": \"EXT-12345\",\n    \"createdAt\": \"2025-01-15T10:30:00Z\",\n    \"externalObjectType\": \"Candidate\"\n  },\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "ce7434ce-c78a-4292-963f-05839d504113",
+              "name": "Bad request - invalid data or mapping already exists",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"providerCode\": \"BULLHORN\",\n  \"externalId\": \"EXT-12345\",\n  \"externalObjectType\": \"Candidate\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"code\": \"string\"\n  },\n  \"data\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "a57ae3a0-b0e0-4ddc-ba01-0e1a08b9621a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n  \"providerCode\": \"BULLHORN\",\n  \"externalId\": \"EXT-12345\",\n  \"externalObjectType\": \"Candidate\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "30a0d7c1-0618-44cc-ac3e-1794cfce2f91",
+          "name": "Update an existing mapping",
+          "request": {
+            "name": "Update an existing mapping",
+            "description": {
+              "content": "Updates the external ID for an existing mapping. This is useful when the\nexternal system ID changes but the mapping relationship should be preserved.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "mappings",
+                ":mappingId"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "mappingId",
+                  "description": "(Required) UUID of the mapping to update"
+                }
+              ]
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "PUT",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://teambridge.us.auth0.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"externalId\": \"<string>\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "response": [
+            {
+              "id": "82f099cc-df9d-47bc-b2d0-774a97342d6c",
+              "name": "Mapping updated successfully",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings",
+                    ":mappingId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "mappingId",
+                      "description": "(Required) UUID of the mapping to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"EXT-67890\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"mappingId\": \"a1b2c3d4-e5f6-7890-abcd-ef1234567890\",\n    \"recordId\": \"550e8400-e29b-41d4-a716-446655440000\",\n    \"providerCode\": \"BULLHORN\",\n    \"externalId\": \"EXT-12345\",\n    \"createdAt\": \"2025-01-15T10:30:00Z\",\n    \"externalObjectType\": \"Candidate\"\n  },\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "17f5da3f-c722-48df-a52b-387df4707362",
+              "name": "Bad request - invalid data",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings",
+                    ":mappingId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "mappingId",
+                      "description": "(Required) UUID of the mapping to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"EXT-67890\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"error\": {\n    \"message\": \"string\",\n    \"code\": \"string\"\n  },\n  \"data\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "088ebb0f-18b8-4f56-99e3-533c7d7bbbc5",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings",
+                    ":mappingId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "mappingId",
+                      "description": "(Required) UUID of the mapping to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"EXT-67890\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "8f8fa8b7-a8fb-4858-b721-70df74daf16e",
+              "name": "Mapping not found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings",
+                    ":mappingId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "mappingId",
+                      "description": "(Required) UUID of the mapping to update"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "PUT",
+                "body": {
+                  "mode": "raw",
+                  "raw": "{\n  \"externalId\": \"EXT-67890\"\n}",
+                  "options": {
+                    "raw": {
+                      "language": "json"
+                    }
+                  }
+                }
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        },
+        {
+          "id": "2f982f17-cf64-470d-bff6-6b6280b401cf",
+          "name": "Delete a mapping",
+          "request": {
+            "name": "Delete a mapping",
+            "description": {
+              "content": "Deletes an external system mapping. This removes the link between a Teambridge\nrecord and an external system entity without affecting the underlying record.\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "mappings",
+                ":mappingId"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": [
+                {
+                  "disabled": false,
+                  "type": "any",
+                  "value": "<uuid>",
+                  "key": "mappingId",
+                  "description": "(Required) UUID of the mapping to delete"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://teambridge.us.auth0.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "1d97fc1d-3707-4adc-b062-21947edaadaf",
+              "name": "Mapping deleted successfully",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings",
+                    ":mappingId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "mappingId",
+                      "description": "(Required) UUID of the mapping to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "No Content",
+              "code": 204,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "f8b0a47d-df46-4b46-b3f3-597dd1d7be91",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings",
+                    ":mappingId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "mappingId",
+                      "description": "(Required) UUID of the mapping to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            },
+            {
+              "id": "ebb4e7e3-2400-48d3-8cb0-5f077bc94832",
+              "name": "Mapping not found",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "mappings",
+                    ":mappingId"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": [
+                    {
+                      "disabled": false,
+                      "type": "any",
+                      "value": "<uuid>",
+                      "key": "mappingId",
+                      "description": "(Required) UUID of the mapping to delete"
+                    }
+                  ]
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "DELETE",
+                "body": {}
+              },
+              "status": "Not Found",
+              "code": 404,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://open-api.teambridge.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "write"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://teambridge.us.auth0.com/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "ca0bb543-88d3-40d7-ae68-81a813e6bf10",
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Mappings API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "External API for Teambridge platform.\n\n**Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).\nExamples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).\n\n**Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.\n\n**Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.\n",
+      "type": "text/plain"
+    }
+  }
+}

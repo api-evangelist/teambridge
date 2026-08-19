@@ -1,0 +1,194 @@
+{
+  "item": [
+    {
+      "id": "ea5d74c6-9c71-43fc-8fbb-8660084c44b9",
+      "name": "Utilities",
+      "description": {
+        "content": "Utility endpoints for timezone information and other general-purpose data.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "5fcf921d-ef77-4278-929d-b6fc33bcf475",
+          "name": "Get supported timezones",
+          "request": {
+            "name": "Get supported timezones",
+            "description": {
+              "content": "Returns a list of all supported timezone identifiers, sorted alphabetically.",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "timezones"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "GET",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://teambridge.us.auth0.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "18ce1349-34ca-4e36-a569-039049ed3353",
+              "name": "List of supported timezones",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "timezones"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "[\n  \"America/Los_Angeles\",\n  \"America/New_York\",\n  \"Europe/London\",\n  \"Asia/Tokyo\"\n]",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "0378b5b6-36cf-4610-995a-86d4ac0bd18a",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "timezones"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "GET",
+                "body": {}
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://open-api.teambridge.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "write"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://teambridge.us.auth0.com/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "60bf7fb8-65ea-41d1-9cf1-8ef3e2fe6f61",
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Utilities API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "External API for Teambridge platform.\n\n**Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).\nExamples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).\n\n**Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.\n\n**Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.\n",
+      "type": "text/plain"
+    }
+  }
+}

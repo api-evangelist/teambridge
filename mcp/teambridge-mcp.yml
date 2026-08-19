@@ -2,48 +2,53 @@ generated: '2026-07-21'
 method: derived
 status: candidate
 source: openapi/teambridge-openapi-original.json
-note: >-
-  No official hosted/remote MCP server was found for Teambridge (checked docs and
-  registries). The tool list below is a CANDIDATE derived one-to-one from the
-  External API operations, provided as a starting point for an MCP server.
+note: No official hosted/remote MCP server was found for Teambridge (checked docs and registries). The
+  tool list below is a CANDIDATE derived one-to-one from the External API operations, provided as a starting
+  point for an MCP server.
 server:
   name: teambridge
   transport: http
   auth: oauth2-client-credentials (Auth0)
 tools:
-  - name: list_collections
-    description: List all collections available in the account.
-    source_operation: openapi/teambridge-openapi-original.json#listCollections
-  - name: list_fields
-    description: Retrieve field metadata for a collection.
-    source_operation: openapi/teambridge-openapi-original.json#listFields
-  - name: list_records
-    description: List records in a collection with filtering and pagination.
-    source_operation: openapi/teambridge-openapi-original.json#listRecords
-  - name: get_record
-    description: Retrieve a single record by ID.
-    source_operation: openapi/teambridge-openapi-original.json#getRecord
-  - name: create_record
-    description: Create a record in a collection.
-    source_operation: openapi/teambridge-openapi-original.json#createRecord
-  - name: update_record
-    description: Update a record by ID.
-    source_operation: openapi/teambridge-openapi-original.json#updateRecord
-  - name: list_mappings
-    description: List external-system record mappings.
-    source_operation: openapi/teambridge-openapi-original.json#listMappings
-  - name: create_mapping
-    description: Create an external-system record mapping.
-    source_operation: openapi/teambridge-openapi-original.json#createMapping
-  - name: update_mapping
-    description: Update an external-system record mapping.
-    source_operation: openapi/teambridge-openapi-original.json#updateMapping
-  - name: delete_mapping
-    description: Delete an external-system record mapping.
-    source_operation: openapi/teambridge-openapi-original.json#deleteMapping
-  - name: upload_document
-    description: Upload a document (max 100MB).
-    source_operation: openapi/teambridge-openapi-original.json#POST /v1/documents
-  - name: list_timezones
-    description: Retrieve supported timezone information.
-    source_operation: openapi/teambridge-openapi-original.json#GET /v1/timezones
+- name: list_collections
+  description: List all collections available in the account.
+  source_operation: openapi/teambridge-openapi-original.json#listCollections
+- name: list_fields
+  description: Retrieve field metadata for a collection.
+  source_operation: openapi/teambridge-openapi-original.json#listFields
+- name: list_records
+  description: List records in a collection with filtering and pagination.
+  source_operation: openapi/teambridge-openapi-original.json#listRecords
+- name: get_record
+  description: Retrieve a single record by ID.
+  source_operation: openapi/teambridge-openapi-original.json#getRecord
+- name: create_record
+  description: Create a record in a collection.
+  source_operation: openapi/teambridge-openapi-original.json#createRecord
+- name: update_record
+  description: Update a record by ID.
+  source_operation: openapi/teambridge-openapi-original.json#updateRecord
+- name: list_mappings
+  description: List external-system record mappings.
+  source_operation: openapi/teambridge-openapi-original.json#listMappings
+- name: create_mapping
+  description: Create an external-system record mapping.
+  source_operation: openapi/teambridge-openapi-original.json#createMapping
+- name: update_mapping
+  description: Update an external-system record mapping.
+  source_operation: openapi/teambridge-openapi-original.json#updateMapping
+- name: delete_mapping
+  description: Delete an external-system record mapping.
+  source_operation: openapi/teambridge-openapi-original.json#deleteMapping
+- name: upload_document
+  description: Upload a document (max 100MB).
+  source_operation: openapi/teambridge-openapi-original.json#POST /v1/documents
+- name: list_timezones
+  description: Retrieve supported timezone information.
+  source_operation: openapi/teambridge-openapi-original.json#GET /v1/timezones
+deployment:
+  mode: none
+  verified: derived
+  tools: 12
+  checked: '2026-08-12'
+  source: catalog MCP census

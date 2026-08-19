@@ -1,0 +1,327 @@
+{
+  "item": [
+    {
+      "id": "98f30f3a-8cf5-456f-b708-e64d296a35c5",
+      "name": "Documents",
+      "description": {
+        "content": "Endpoints for uploading and managing documents.",
+        "type": "text/plain"
+      },
+      "item": [
+        {
+          "id": "2b38806c-5805-4ff2-adc6-294cc716f763",
+          "name": "Upload a document",
+          "request": {
+            "name": "Upload a document",
+            "description": {
+              "content": "Uploads a document file with optional metadata for the authenticated account.\n\n**Important**: This endpoint requires `multipart/form-data` content type for file upload.\n\n**Limits**:\n- Maximum file size: 100MB\n- Maximum roles per document: 10\n\nThe request consists of two parts:\n- `file`: The document file to upload (required)\n- `request`: JSON metadata for the document (optional)\n",
+              "type": "text/plain"
+            },
+            "url": {
+              "protocol": "https",
+              "path": [
+                "v1",
+                "documents"
+              ],
+              "host": [
+                "open-api",
+                "teambridge",
+                "com"
+              ],
+              "query": [],
+              "variable": []
+            },
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "multipart/form-data"
+              },
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "method": "POST",
+            "auth": {
+              "type": "oauth2",
+              "oauth2": [
+                {
+                  "key": "scope",
+                  "value": "write"
+                },
+                {
+                  "key": "accessTokenUrl",
+                  "value": "https://teambridge.us.auth0.com/oauth/token"
+                },
+                {
+                  "key": "grant_type",
+                  "value": "client_credentials"
+                }
+              ]
+            },
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "description": "(Required) The document file to upload (max 100MB)"
+                },
+                {
+                  "key": "request",
+                  "value": "{\"isRequired\":false,\"status\":\"<string,null>\",\"userId\":\"<string,null-uuid>\",\"roles\":[\"<string>\",\"<string>\"],\"expiryDate\":\"<string,null-date-time>\",\"customFields\":{\"key_0\":\"<string>\"}}",
+                  "type": "text",
+                  "description": ""
+                }
+              ]
+            }
+          },
+          "response": [
+            {
+              "id": "f67f9356-a1b1-440b-9589-76563d824968",
+              "name": "Document uploaded successfully",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "documents"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) The document file to upload (max 100MB)",
+                        "type": "text/plain"
+                      },
+                      "key": "file",
+                      "value": "<binary>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "request",
+                      "value": "{\"isRequired\":true,\"status\":\"PENDING\",\"userId\":\"123e4567-e89b-12d3-a456-426614174000\",\"roles\":[\"nurse\",\"admin\"],\"expiryDate\":\"2025-12-31T23:59:59Z\",\"customFields\":{\"550e8400-e29b-41d4-a716-446655440000\":\"Issued by State Board\",\"660e8400-e29b-41d4-a716-446655440001\":\"2026-01-15\"}}",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": {\n    \"url\": \"https://storage.example.com/documents/550e8400-e29b-41d4-a716-446655440000/document.pdf\",\n    \"fileName\": \"certification.pdf\",\n    \"contentType\": \"application/pdf\",\n    \"recordId\": \"200c7b23-5ba6-4cf4-a332-6da9394b7112\",\n    \"customFields\": {\n      \"key_0\": {}\n    }\n  },\n  \"error\": null\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "1209a4d3-96b5-45e7-a012-5d2c2a8617cd",
+              "name": "Bad request - file size exceeds 100MB or more than 10 roles assigned",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "documents"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  },
+                  {
+                    "key": "Accept",
+                    "value": "application/json"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) The document file to upload (max 100MB)",
+                        "type": "text/plain"
+                      },
+                      "key": "file",
+                      "value": "<binary>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "request",
+                      "value": "{\"isRequired\":true,\"status\":\"PENDING\",\"userId\":\"123e4567-e89b-12d3-a456-426614174000\",\"roles\":[\"nurse\",\"admin\"],\"expiryDate\":\"2025-12-31T23:59:59Z\",\"customFields\":{\"550e8400-e29b-41d4-a716-446655440000\":\"Issued by State Board\",\"660e8400-e29b-41d4-a716-446655440001\":\"2026-01-15\"}}",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "Bad Request",
+              "code": 400,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "application/json"
+                }
+              ],
+              "body": "{\n  \"data\": null,\n  \"error\": {\n    \"message\": \"File size of 150MB exceeds maximum allowed size of 100MB\",\n    \"code\": \"MAX_FILE_SIZE_EXCEEDED\"\n  }\n}",
+              "cookie": [],
+              "_postman_previewlanguage": "json"
+            },
+            {
+              "id": "fdadc044-1bab-47a6-99ec-e6aaa3171104",
+              "name": "Unauthorized",
+              "originalRequest": {
+                "url": {
+                  "protocol": "https",
+                  "path": [
+                    "v1",
+                    "documents"
+                  ],
+                  "host": [
+                    "open-api",
+                    "teambridge",
+                    "com"
+                  ],
+                  "query": [],
+                  "variable": []
+                },
+                "header": [
+                  {
+                    "description": {
+                      "content": "Added as a part of security scheme: oauth2",
+                      "type": "text/plain"
+                    },
+                    "key": "Authorization",
+                    "value": "<token>"
+                  }
+                ],
+                "method": "POST",
+                "body": {
+                  "mode": "formdata",
+                  "formdata": [
+                    {
+                      "description": {
+                        "content": "(Required) The document file to upload (max 100MB)",
+                        "type": "text/plain"
+                      },
+                      "key": "file",
+                      "value": "<binary>",
+                      "type": "text"
+                    },
+                    {
+                      "description": {
+                        "content": "",
+                        "type": "text/plain"
+                      },
+                      "key": "request",
+                      "value": "{\"isRequired\":true,\"status\":\"PENDING\",\"userId\":\"123e4567-e89b-12d3-a456-426614174000\",\"roles\":[\"nurse\",\"admin\"],\"expiryDate\":\"2025-12-31T23:59:59Z\",\"customFields\":{\"550e8400-e29b-41d4-a716-446655440000\":\"Issued by State Board\",\"660e8400-e29b-41d4-a716-446655440001\":\"2026-01-15\"}}",
+                      "type": "text"
+                    }
+                  ]
+                }
+              },
+              "status": "Unauthorized",
+              "code": 401,
+              "header": [
+                {
+                  "key": "Content-Type",
+                  "value": "text/plain"
+                }
+              ],
+              "body": "",
+              "cookie": [],
+              "_postman_previewlanguage": "text"
+            }
+          ],
+          "event": [],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          }
+        }
+      ],
+      "event": []
+    }
+  ],
+  "event": [],
+  "variable": [
+    {
+      "type": "string",
+      "value": "https://open-api.teambridge.com",
+      "key": "baseUrl"
+    }
+  ],
+  "auth": {
+    "type": "oauth2",
+    "oauth2": [
+      {
+        "key": "scope",
+        "value": "write"
+      },
+      {
+        "key": "accessTokenUrl",
+        "value": "https://teambridge.us.auth0.com/oauth/token"
+      },
+      {
+        "key": "grant_type",
+        "value": "client_credentials"
+      }
+    ]
+  },
+  "info": {
+    "_postman_id": "c5f56c07-264c-4aad-a019-4bc211f135bc",
+    "name": "Teambridge External Collections (Unified API) Collections (Unified API) Documents API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": {
+      "content": "External API for Teambridge platform.\n\n**Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).\nExamples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).\n\n**Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.\n\n**Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.\n",
+      "type": "text/plain"
+    }
+  }
+}
