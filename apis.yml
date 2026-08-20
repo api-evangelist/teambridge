@@ -42,6 +42,15 @@ tags:
 - Payroll
 - HR
 - Frontline
+- Webhook
+tags_raw:
+- Company
+- Workforce Management
+- Scheduling
+- Time Tracking
+- Payroll
+- HR
+- Frontline
 - Webhooks
 apis:
 - aid: teambridge:teambridge-collections-unified-api-api
