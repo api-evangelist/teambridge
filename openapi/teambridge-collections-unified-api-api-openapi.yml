@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Teambridge External Collections (Unified API) Collections (Unified API) Collections (Unified API) API
+  title: Teambridge External Collections (Unified API) API
   version: 0.1.0
   description: 'External API for Teambridge platform.
 
@@ -570,27 +570,6 @@ paths:
           description: Record or collection not found
 components:
   schemas:
-    ListCollectionsMetadata:
-      type: object
-      properties:
-        accountId:
-          type: string
-          format: uuid
-        count:
-          type: integer
-          example: 1
-      required:
-      - accountId
-      - count
-    ListCollectionsResponse:
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/ListCollectionsMetadata'
-        collections:
-          type: array
-          items:
-            $ref: '#/components/schemas/Collection'
     Collection:
       type: object
       properties:
@@ -603,6 +582,60 @@ components:
       required:
       - id
       - name
+    SelectOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Option identifier (use this UUID in write requests)
+          example: bb31a869-2e73-4468-ab94-73ea256e08a2
+        name:
+          type: string
+          description: Option display name
+          example: RN - Registered Nurse
+      required:
+      - id
+      - name
+    ListCollectionsResponse:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ListCollectionsMetadata'
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Collection'
+    GenericErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: The page size exceeds the limit of 50
+    CreateRecordResponse:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Success message containing the created record ID
+          example: 'Resource created with ID: 123e4567-e89b-12d3-a456-426614174000'
+        error:
+          type: 'null'
+    ListCollectionsMetadata:
+      type: object
+      properties:
+        accountId:
+          type: string
+          format: uuid
+        count:
+          type: integer
+          example: 1
+      required:
+      - accountId
+      - count
     GenericWriteRequest:
       type: object
       properties:
@@ -625,15 +658,6 @@ components:
             1d566c20-accd-450f-afad-8c572f176bd0: 4bfabc6f-f512-4c48-849b-8c94b83c215e
       required:
       - data
-    CreateRecordResponse:
-      type: object
-      properties:
-        data:
-          type: string
-          description: Success message containing the created record ID
-          example: 'Resource created with ID: 123e4567-e89b-12d3-a456-426614174000'
-        error:
-          type: 'null'
     Field:
       type: object
       properties:
@@ -743,30 +767,6 @@ components:
         8d74ff97-4cb5-49c8-af77-a3d98af4b1c2: false
         ade2b23c-6a3b-49fe-bc13-d37b0c39941c: 1234
         0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7: '2024-01-15T10:30:00Z'
-    GenericErrorResponse:
-      type: object
-      properties:
-        data:
-          type: 'null'
-        error:
-          type: string
-          description: Error message describing what went wrong
-          example: The page size exceeds the limit of 50
-    SelectOption:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Option identifier (use this UUID in write requests)
-          example: bb31a869-2e73-4468-ab94-73ea256e08a2
-        name:
-          type: string
-          description: Option display name
-          example: RN - Registered Nurse
-      required:
-      - id
-      - name
   securitySchemes:
     OAuth2:
       type: oauth2

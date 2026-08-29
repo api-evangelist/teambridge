@@ -1,0 +1,194 @@
+openapi: 3.2.0
+info:
+  title: Teambridge External API
+  version: 0.1.0
+  description: 'External API for Teambridge platform.
+
+
+    **Date-Time Format**: All date-time fields in this API use ISO 8601 format with timezone information (YYYY-MM-DDTHH:MM:SSZ).
+
+    Examples: `2025-06-05T09:00:00Z` (UTC), `2025-06-05T09:00:00-07:00` (with timezone offset).
+
+
+    **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
+
+
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
+
+    '
+servers:
+- url: https://open-api.teambridge.com
+  description: Production API server
+security:
+- OAuth2:
+  - write
+tags:
+- name: Teambridge External API
+paths: {}
+webhooks:
+  eventNotification:
+    post:
+      summary: Webhooks
+      description: "Subscribe to events in Teambridge to receive real-time notifications when your data changes.\n\nAccount owners: configure your webhook subscriptions inside Settings > Account | Outbound webhooks\n\nChoose a publicly-accessible *HTTPS* endpoint where we should send events. Select the events to which you\nwould like to subscribe.\n\nWhen you save the webhook subscription, a modal will show you your HMAC secret. Store this somewhere safe.\nThe secret key lets you validate that events published to your endpoint come from us. If you lose your secret,\nyou can rotate it and receive a new one.\n\n## Security\n\nAll webhook requests include HMAC-SHA256 signatures for verification. The signature lets you know that this event came from Teambridge.\n\n**Request Headers:**\n- `X-Webhook-Signature`: HMAC-SHA256 signature with `sha256=` prefix (e.g., `sha256=abc123...`)\n- `X-Webhook-Timestamp`: Unix timestamp in seconds (when the webhook was sent)\n- `Content-Type`: application/json\n\n**Signature Verification:**\n\n1. Extract the `X-Webhook-Timestamp` and `X-Webhook-Signature` headers from the request\n2. Strip the `sha256=` prefix from the signature header\n3. Construct the signed payload: `{timestamp}.{request_body}` (use the raw request body string, not parsed JSON)\n4. Compute HMAC-SHA256 of the signed payload using your webhook secret\n5. Compare the computed signature with the provided signature using constant-time comparison\n6. Reject requests with timestamps more than 5 minutes old (prevents replay attacks)\n\n**Example Verification (Node.js):**\n\nFirst, check that the timestamp is recent (within 5 minutes):\n\n```javascript\nconst timestamp = request.headers['x-webhook-timestamp'];\nconst currentTime = Math.floor(Date.now() / 1000);\n\nif (Math.abs(currentTime - timestamp) > 300) {\n  throw new Error('Webhook timestamp too old');\n}\n```\n\nThen, compute the expected signature and compare. Note that you must use the raw request body string, not parsed JSON:\n\n```javascript\nconst crypto = require('crypto');\nconst signatureHeader = request.headers['x-webhook-signature'];\nconst signature = signatureHeader.replace('sha256=', '');\nconst rawBody = request.rawBody;\n\nconst signedPayload = `${timestamp}.${rawBody}`;\nconst expectedSignature = crypto\n  .createHmac('sha256', secret)\n  .update(signedPayload)\n  .digest('hex');\n\nif (!crypto.timingSafeEqual(\n  Buffer.from(signature),\n  Buffer.from(expectedSignature)\n)) {\n  throw new Error('Invalid webhook signature');\n}\n```\n\n## Secret Management\n\n- All webhook subscriptions for an account share the same secret key\n- Secrets are only shown once when first created or rotated\n- During rotation, update your verification code with the new secret\n- Store secrets securely (environment variables, secret managers)\n\n## Consuming Webhooks\n\n**Best Practices:**\n1. **Respond quickly** - Return 200 OK within 5 seconds to avoid retries\n2. **Process asynchronously** - Queue the webhook for background processing\n3. **Verify signatures** - Always validate the HMAC signature before processing\n4. **Check timestamps** - Reject old webhooks to prevent replay attacks\n5. **Handle idempotently** - Use `event_id` to deduplicate events\n6. **Return appropriate status codes**:\n   - `200 OK` - Webhook received and verified successfully\n   - `400 Bad Request` - Invalid signature or expired timestamp\n   - `500 Internal Server Error` - Processing error (will trigger retry)\n\n## Payload Versioning\n\nThe webhook payload format is versioned. The current version is `1.0` (see the `version` field in the payload).\n\n- Breaking changes will increment the version number\n- Non-breaking additions (new optional fields) do not change the version\n- Parse the `version` field to handle different payload formats\n- Version changes will be announced in advance via release notes\n\n## Retry Behavior\n\nIf your endpoint does not return `200 OK`, Teambridge will retry the webhook\n- Maximum retry attempts: 5\n- Webhooks are marked as failed after all retries are exhausted\n- Contact support to replay failed webhooks if needed\n"
+      security:
+      - WebhookSignature: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - version
+              - event_type
+              - event_id
+              - timestamp
+              - account_id
+              - data
+              properties:
+                version:
+                  type: string
+                  description: Webhook payload version (current version is "1.0")
+                  example: '1.0'
+                event_type:
+                  type: string
+                  description: 'The type of event that triggered the webhook. Event types follow snake_case naming
+
+                    convention (e.g., shift_created, user_updated, location_deleted).
+
+                    '
+                  example: shift_updated
+                event_id:
+                  type: string
+                  format: uuid
+                  description: 'Unique identifier for this webhook event. Use this for idempotent processing
+
+                    to prevent duplicate handling of the same event.
+
+                    '
+                  example: 550e8400-e29b-41d4-a716-446655440000
+                timestamp:
+                  type: string
+                  format: date-time
+                  description: ISO 8601 timestamp when the event occurred
+                  example: '2025-06-05T14:30:00Z'
+                account_id:
+                  type: string
+                  format: uuid
+                  description: The account ID where the event occurred
+                  example: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+                data:
+                  type: object
+                  required:
+                  - action
+                  - collection_id
+                  - record_id
+                  properties:
+                    action:
+                      type: string
+                      enum:
+                      - created
+                      - updated
+                      - deleted
+                      description: The action that was performed on the record
+                      example: created
+                    collection_id:
+                      type: string
+                      format: uuid
+                      description: 'The ID of the collection where the record exists. Use this with
+
+                        GET /v1/collections/{collectionId}/records/{recordId} to fetch full record details.
+
+                        '
+                      example: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                    record_id:
+                      type: string
+                      format: uuid
+                      description: 'The ID of the affected record. Use this with the Collections API to retrieve
+
+                        the full record data if needed.
+
+                        '
+                      example: b2c3d4e5-f6a7-8901-bcde-f12345678901
+                    actor:
+                      type:
+                      - object
+                      - 'null'
+                      description: 'Information about the user who performed the action. May be null for
+
+                        system-initiated actions.
+
+                        '
+                      properties:
+                        user_id:
+                          type: string
+                          format: uuid
+                          description: The UUID of the user who performed the action
+                          example: c3d4e5f6-a7b8-9012-cdef-123456789012
+                        name:
+                          type: string
+                          description: The display name of the user
+                          example: Ada Lovelace
+            examples:
+              shiftUpdated:
+                summary: Shift updated by a manager
+                value:
+                  version: '1.0'
+                  event_type: shift_updated
+                  event_id: 550e8400-e29b-41d4-a716-446655440000
+                  timestamp: '2025-06-05T14:30:00Z'
+                  account_id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+                  data:
+                    action: updated
+                    collection_id: a1b2c3d4-e5f6-7890-abcd-ef1234567890
+                    record_id: b2c3d4e5-f6a7-8901-bcde-f12345678901
+                    actor:
+                      user_id: c3d4e5f6-a7b8-9012-cdef-123456789012
+                      name: Sarah Sherman
+              userCreatedByAutomation:
+                summary: User created by automation (no actor)
+                value:
+                  version: '1.0'
+                  event_type: user_created
+                  event_id: 660e8400-e29b-41d4-a716-446655440001
+                  timestamp: '2025-06-05T15:45:00Z'
+                  account_id: 7c9e6679-7425-40de-944b-e07fc1f90ae7
+                  data:
+                    action: created
+                    collection_id: d4e5f6a7-b8c9-0123-def1-234567890123
+                    record_id: e5f6a7b8-c9d0-1234-ef12-345678901234
+                    actor: null
+      responses:
+        '200':
+          description: Webhook received and verified successfully
+        '400':
+          description: Invalid signature or expired timestamp
+        '500':
+          description: Server error (webhook will be retried)
+      tags:
+      - Teambridge External API
+components:
+  securitySchemes:
+    OAuth2:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: https://teambridge.us.auth0.com/oauth/token
+          scopes:
+            write: Full access
+    WebhookSignature:
+      type: apiKey
+      in: header
+      name: X-Webhook-Signature
+      description: 'HMAC-SHA256 signature for webhook authentication. The signature is computed from
+
+        the concatenation of the timestamp and request body: `{timestamp}.{body}`.
+
+        The signature header value includes the scheme prefix: `sha256={hex_signature}`.
+
+
+        Webhook consumers must verify this signature using their webhook secret to ensure
+
+        the request originated from Teambridge.
+
+        '

@@ -258,6 +258,17 @@ apis:
     url: conformance/teambridge-conformance.yml
   - type: DataModel
     url: data-model/teambridge-data-model.yml
+- aid: teambridge:teambridge-teambridge-external-api-api
+  name: Teambridge Teambridge External API
+  description: >-
+    The Teambridge External API API from Teambridge — 0 operation(s) for teambridge external api.
+  humanURL: https://docs.teambridge.com
+  baseURL: https://open-api.teambridge.com
+  tags:
+  - Teambridge External API
+  properties:
+  - type: OpenAPI
+    url: openapi/teambridge-teambridge-external-api-api-openapi.yml
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com

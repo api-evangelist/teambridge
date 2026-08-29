@@ -1,20 +1,28 @@
 {
   "provider": "teambridge",
   "sources": [
-    "teambridge-collections-unified-api-api-openapi.yml",
-    "teambridge-documents-api-openapi.yml",
-    "teambridge-mappings-api-openapi.yml",
-    "teambridge-utilities-api-openapi.yml"
+    "_original/teambridge-openapi-original.json"
   ],
   "outputs": [
     "teambridge-collections-unified-api-api-openapi.yml",
     "teambridge-documents-api-openapi.yml",
     "teambridge-mappings-api-openapi.yml",
+    "teambridge-teambridge-external-api-api-openapi.yml",
     "teambridge-utilities-api-openapi.yml"
   ],
   "archived": [],
   "errors": [],
   "warnings": [],
-  "notes": [],
-  "skipped": []
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "teambridge-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "teambridge-openapi-original.json: tagged webhooks POST eventNotification -> Teambridge External API",
+    "teambridge-openapi-original.json: declared missing tag: Teambridge External API"
+  ],
+  "skipped": [
+    "teambridge-collections-unified-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "teambridge-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "teambridge-mappings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "teambridge-utilities-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
 }

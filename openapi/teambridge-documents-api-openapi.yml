@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Teambridge External Collections (Unified API) Collections (Unified API) Documents API
+  title: Teambridge External Documents API
   version: 0.1.0
   description: 'External API for Teambridge platform.
 
@@ -108,6 +108,15 @@ paths:
           description: Unauthorized
 components:
   schemas:
+    StandardErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      required:
+      - error
     ErrorDetail:
       type: object
       properties:
@@ -120,6 +129,42 @@ components:
       required:
       - message
       - code
+    CreateDocumentResponse:
+      type: object
+      required:
+      - url
+      - fileName
+      - contentType
+      properties:
+        recordId:
+          type: string
+          format: uuid
+          example: 200c7b23-5ba6-4cf4-a332-6da9394b7112
+        url:
+          type: string
+          description: URL of the uploaded document
+          example: https://storage.example.com/documents/550e8400-e29b-41d4-a716-446655440000/document.pdf
+        fileName:
+          type: string
+          description: Name of the uploaded file
+          example: certification.pdf
+        contentType:
+          type: string
+          description: MIME type of the uploaded file
+          example: application/pdf
+        customFields:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: 'Map of custom field values stored with the document. Keys are the custom field
+
+            schema UUIDs. Present only when custom fields were provided at upload time.
+
+            '
+          example:
+            550e8400-e29b-41d4-a716-446655440000: Issued by State Board
+            660e8400-e29b-41d4-a716-446655440001: '2026-01-15'
     CreateDocumentRequest:
       type: object
       properties:
@@ -180,51 +225,6 @@ components:
           example:
             550e8400-e29b-41d4-a716-446655440000: Issued by State Board
             660e8400-e29b-41d4-a716-446655440001: '2026-01-15'
-    CreateDocumentResponse:
-      type: object
-      required:
-      - url
-      - fileName
-      - contentType
-      properties:
-        recordId:
-          type: string
-          format: uuid
-          example: 200c7b23-5ba6-4cf4-a332-6da9394b7112
-        url:
-          type: string
-          description: URL of the uploaded document
-          example: https://storage.example.com/documents/550e8400-e29b-41d4-a716-446655440000/document.pdf
-        fileName:
-          type: string
-          description: Name of the uploaded file
-          example: certification.pdf
-        contentType:
-          type: string
-          description: MIME type of the uploaded file
-          example: application/pdf
-        customFields:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: 'Map of custom field values stored with the document. Keys are the custom field
-
-            schema UUIDs. Present only when custom fields were provided at upload time.
-
-            '
-          example:
-            550e8400-e29b-41d4-a716-446655440000: Issued by State Board
-            660e8400-e29b-41d4-a716-446655440001: '2026-01-15'
-    StandardErrorResponse:
-      type: object
-      properties:
-        data:
-          type: 'null'
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      required:
-      - error
   securitySchemes:
     OAuth2:
       type: oauth2

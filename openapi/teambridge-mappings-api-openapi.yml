@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Teambridge External Collections (Unified API) Collections (Unified API) Mappings API
+  title: Teambridge External Mappings API
   version: 0.1.0
   description: 'External API for Teambridge platform.
 
@@ -208,6 +208,31 @@ components:
           $ref: '#/components/schemas/ErrorDetail'
       required:
       - error
+    CreateMappingRequest:
+      type: object
+      required:
+      - recordId
+      - providerCode
+      - externalId
+      - externalObjectType
+      properties:
+        recordId:
+          type: string
+          format: uuid
+          description: ID of the record in Teambridge
+          example: 550e8400-e29b-41d4-a716-446655440000
+        providerCode:
+          type: string
+          description: Code identifying the external provider
+          example: BULLHORN
+        externalId:
+          type: string
+          description: ID of the entity in the external system
+          example: EXT-12345
+        externalObjectType:
+          type: string
+          description: Type of the object in the external system
+          example: Candidate
     MappingDto:
       type: object
       required:
@@ -255,31 +280,6 @@ components:
           type: string
           description: New external ID for the mapping
           example: EXT-67890
-    CreateMappingRequest:
-      type: object
-      required:
-      - recordId
-      - providerCode
-      - externalId
-      - externalObjectType
-      properties:
-        recordId:
-          type: string
-          format: uuid
-          description: ID of the record in Teambridge
-          example: 550e8400-e29b-41d4-a716-446655440000
-        providerCode:
-          type: string
-          description: Code identifying the external provider
-          example: BULLHORN
-        externalId:
-          type: string
-          description: ID of the entity in the external system
-          example: EXT-12345
-        externalObjectType:
-          type: string
-          description: Type of the object in the external system
-          example: Candidate
     ErrorDetail:
       type: object
       properties:

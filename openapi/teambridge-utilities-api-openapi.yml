@@ -1,6 +1,6 @@
-openapi: 3.1.0
+openapi: 3.2.0
 info:
-  title: Teambridge External Collections (Unified API) Collections (Unified API) Utilities API
+  title: Teambridge External Utilities API
   version: 0.1.0
   description: 'External API for Teambridge platform.
 
