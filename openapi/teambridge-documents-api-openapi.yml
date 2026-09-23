@@ -13,9 +13,7 @@ info:
     **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
 
 
-    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
-
-    '
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.'
 servers:
 - url: https://open-api.teambridge.com
   description: Production API server
@@ -50,9 +48,7 @@ paths:
 
         - `file`: The document file to upload (required)
 
-        - `request`: JSON metadata for the document (optional)
-
-        '
+        - `request`: JSON metadata for the document (optional)'
       requestBody:
         required: true
         content:
@@ -106,6 +102,8 @@ paths:
                       code: MAX_ROLES_PER_DOCUMENT_EXCEEDED
         '401':
           description: Unauthorized
+      operationId: postV1Documents
+      x-operation-id-source: derived
 components:
   schemas:
     StandardErrorResponse:
@@ -129,42 +127,6 @@ components:
       required:
       - message
       - code
-    CreateDocumentResponse:
-      type: object
-      required:
-      - url
-      - fileName
-      - contentType
-      properties:
-        recordId:
-          type: string
-          format: uuid
-          example: 200c7b23-5ba6-4cf4-a332-6da9394b7112
-        url:
-          type: string
-          description: URL of the uploaded document
-          example: https://storage.example.com/documents/550e8400-e29b-41d4-a716-446655440000/document.pdf
-        fileName:
-          type: string
-          description: Name of the uploaded file
-          example: certification.pdf
-        contentType:
-          type: string
-          description: MIME type of the uploaded file
-          example: application/pdf
-        customFields:
-          type:
-          - object
-          - 'null'
-          additionalProperties: {}
-          description: 'Map of custom field values stored with the document. Keys are the custom field
-
-            schema UUIDs. Present only when custom fields were provided at upload time.
-
-            '
-          example:
-            550e8400-e29b-41d4-a716-446655440000: Issued by State Board
-            660e8400-e29b-41d4-a716-446655440001: '2026-01-15'
     CreateDocumentRequest:
       type: object
       properties:
@@ -220,6 +182,42 @@ components:
             corresponding to custom field schema IDs defined in the document collection.
 
             Invalid or unknown schema UUIDs will result in a `400` error.
+
+            '
+          example:
+            550e8400-e29b-41d4-a716-446655440000: Issued by State Board
+            660e8400-e29b-41d4-a716-446655440001: '2026-01-15'
+    CreateDocumentResponse:
+      type: object
+      required:
+      - url
+      - fileName
+      - contentType
+      properties:
+        recordId:
+          type: string
+          format: uuid
+          example: 200c7b23-5ba6-4cf4-a332-6da9394b7112
+        url:
+          type: string
+          description: URL of the uploaded document
+          example: https://storage.example.com/documents/550e8400-e29b-41d4-a716-446655440000/document.pdf
+        fileName:
+          type: string
+          description: Name of the uploaded file
+          example: certification.pdf
+        contentType:
+          type: string
+          description: MIME type of the uploaded file
+          example: application/pdf
+        customFields:
+          type:
+          - object
+          - 'null'
+          additionalProperties: {}
+          description: 'Map of custom field values stored with the document. Keys are the custom field
+
+            schema UUIDs. Present only when custom fields were provided at upload time.
 
             '
           example:

@@ -13,9 +13,7 @@ info:
     **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
 
 
-    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
-
-    '
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.'
 servers:
 - url: https://open-api.teambridge.com
   description: Production API server
@@ -28,9 +26,7 @@ tags:
 
     to entities in external systems (like Bullhorn, ADP, etc.) by storing the external
 
-    provider code, external ID, and object type.
-
-    '
+    provider code, external ID, and object type.'
 paths:
   /v1/mappings:
     get:
@@ -41,9 +37,7 @@ paths:
       summary: List all mappings for a record
       description: 'Returns all external system mappings for a specific Teambridge record.
 
-        Mappings link records to external system entities.
-
-        '
+        Mappings link records to external system entities.'
       operationId: listMappings
       parameters:
       - name: recordId
@@ -82,9 +76,7 @@ paths:
       summary: Create a new mapping
       description: 'Creates a new mapping linking a Teambridge record to an external system entity.
 
-        Each mapping associates a record with an external provider, external ID, and object type.
-
-        '
+        Each mapping associates a record with an external provider, external ID, and object type.'
       operationId: createMapping
       requestBody:
         required: true
@@ -124,9 +116,7 @@ paths:
       summary: Update an existing mapping
       description: 'Updates the external ID for an existing mapping. This is useful when the
 
-        external system ID changes but the mapping relationship should be preserved.
-
-        '
+        external system ID changes but the mapping relationship should be preserved.'
       operationId: updateMapping
       parameters:
       - name: mappingId
@@ -175,9 +165,7 @@ paths:
       summary: Delete a mapping
       description: 'Deletes an external system mapping. This removes the link between a Teambridge
 
-        record and an external system entity without affecting the underlying record.
-
-        '
+        record and an external system entity without affecting the underlying record.'
       operationId: deleteMapping
       parameters:
       - name: mappingId
@@ -199,6 +187,18 @@ paths:
           description: Mapping not found
 components:
   schemas:
+    ErrorDetail:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+      required:
+      - message
+      - code
     StandardErrorResponse:
       type: object
       properties:
@@ -233,6 +233,15 @@ components:
           type: string
           description: Type of the object in the external system
           example: Candidate
+    UpdateMappingRequest:
+      type: object
+      required:
+      - externalId
+      properties:
+        externalId:
+          type: string
+          description: New external ID for the mapping
+          example: EXT-67890
     MappingDto:
       type: object
       required:
@@ -271,27 +280,6 @@ components:
           format: date-time
           description: Timestamp when the mapping was created in ISO 8601 format with timezone (YYYY-MM-DDTHH:MM:SSZ)
           example: '2025-01-15T10:30:00Z'
-    UpdateMappingRequest:
-      type: object
-      required:
-      - externalId
-      properties:
-        externalId:
-          type: string
-          description: New external ID for the mapping
-          example: EXT-67890
-    ErrorDetail:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: Machine-readable error code
-      required:
-      - message
-      - code
   securitySchemes:
     OAuth2:
       type: oauth2

@@ -17,12 +17,14 @@
     "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
     "teambridge-openapi-original.json: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
     "teambridge-openapi-original.json: tagged webhooks POST eventNotification -> Teambridge External API",
-    "teambridge-openapi-original.json: declared missing tag: Teambridge External API"
+    "teambridge-openapi-original.json: declared missing tag: Teambridge External API",
+    "apis.yml register: already-registered"
   ],
   "skipped": [
     "teambridge-collections-unified-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "teambridge-documents-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "teambridge-mappings-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "teambridge-teambridge-external-api-api-openapi.yml: previously refined output, superseded by openapi/_original/",
     "teambridge-utilities-api-openapi.yml: previously refined output, superseded by openapi/_original/"
   ]
 }

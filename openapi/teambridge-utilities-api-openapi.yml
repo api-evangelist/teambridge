@@ -13,9 +13,7 @@ info:
     **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
 
 
-    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
-
-    '
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.'
 servers:
 - url: https://open-api.teambridge.com
   description: Production API server
@@ -46,6 +44,8 @@ paths:
                 $ref: '#/components/schemas/TimezonesList'
         '401':
           description: Unauthorized
+      operationId: getV1Timezones
+      x-operation-id-source: derived
 components:
   schemas:
     TimezonesList:

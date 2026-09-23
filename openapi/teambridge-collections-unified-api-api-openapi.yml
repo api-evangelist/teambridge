@@ -13,9 +13,7 @@ info:
     **Authentication**: This API uses OAuth 2.0 Client Credentials flow for authentication.
 
 
-    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.
-
-    '
+    **Filtering**: The unified Collections API supports advanced filtering via query parameters. See the Collections (Unified API) section for full details.'
 servers:
 - url: https://open-api.teambridge.com
   description: Production API server
@@ -24,73 +22,7 @@ security:
   - write
 tags:
 - name: Collections (Unified API)
-  description: '**Powerful generic endpoints** for reading and writing any collection type.
-
-    Works with all collections using field UUIDs. Query `/fields` first to
-
-    discover the schema, then use these endpoints for flexible data access across
-
-    all collection types (shifts, users, placements, locations, custom collections, etc.).
-
-
-    ## Filtering
-
-
-    The unified Collections API (`/v1/collections/{collectionId}/records`) supports powerful filtering via query parameters.
-
-    You can filter records by adding query parameters in the format `{fieldUUID}_{operator}={value}`.
-
-
-    **Supported Operators:**
-
-    - `_is`: Exact match (all field types) - **default if no suffix provided**
-
-    - `_contains`: Partial text match (TEXT fields only)
-
-    - `_gt`: Greater than (NUMBER, DATETIME fields)
-
-    - `_gte`: Greater than or equal (NUMBER, DATETIME fields)
-
-    - `_lt`: Less than (NUMBER, DATETIME fields)
-
-    - `_lte`: Less than or equal (NUMBER, DATETIME fields)
-
-
-    **Filtering Features:**
-
-    - **Multiple filters**: Up to 10 filters per request with implicit AND logic (all must match)
-
-    - **Default operator**: Parameters without a suffix default to `_is` behavior
-
-    - **Multiple operators on same field**: Allowed (e.g., `age_gte=21&age_lte=65` for range queries)
-
-    - **Case-insensitive**: TEXT and SELECT field matching is case-insensitive
-
-    - **Smart date handling**: DATETIME fields support both date-only (`2025-01-01`) and full ISO 8601 format (`2025-01-01T14:30:00Z`)
-
-
-    **Reserved Parameters**: The following parameter names are reserved and cannot be used as filter bases: `page`, `size`, `limit`, `offset`.
-
-
-    **Filtering Examples:**
-
-    - Single filter (exact match): `?550e8400-..._is=john@example.com`
-
-    - Default operator (no suffix): `?550e8400-...=john@example.com` (equivalent to `_is`)
-
-    - Partial text match: `?550e8400-..._contains=john`
-
-    - Date exact match: `?abc123-..._is=2025-12-01`
-
-    - Date range: `?abc123-..._gte=2025-01-01&abc123-..._lte=2025-12-31`
-
-    - Number range: `?age-uuid-..._gte=21&age-uuid-..._lte=65`
-
-    - Multiple fields: `?550e8400-..._is=john@example.com&7c9e6679-..._is=active`
-
-    - Mixed operators: `?name-uuid-..._contains=john&age-uuid-..._gte=21`
-
-    '
+  description: '**Powerful generic endpoints** for reading and writing any collection type.'
 paths:
   /v1/collections:
     get:
@@ -119,9 +51,7 @@ paths:
 
         types, write format hints, select options (for native selects), and linked collection IDs
 
-        (for link-to-object fields). Use this endpoint to discover the schema before reading or writing records.
-
-        '
+        (for link-to-object fields). Use this endpoint to discover the schema before reading or writing records.'
       operationId: listFields
       parameters:
       - name: collectionId
@@ -274,9 +204,7 @@ paths:
 
         - Filter by age range: `?{age-field-uuid}_gte=21&{age-field-uuid}_lte=65`
 
-        - Multiple filters: `?{field1-uuid}_is=value1&{field2-uuid}_contains=value2`
-
-        '
+        - Multiple filters: `?{field1-uuid}_is=value1&{field2-uuid}_contains=value2`'
       operationId: listRecords
       parameters:
       - name: collectionId
@@ -390,9 +318,7 @@ paths:
 
         of field UUIDs to string values. Use the /fields endpoint to discover field IDs
 
-        and their expected write formats (writeFormatHint).
-
-        '
+        and their expected write formats (writeFormatHint).'
       operationId: createRecord
       parameters:
       - name: collectionId
@@ -434,9 +360,7 @@ paths:
       summary: Get a single record by ID
       description: 'Returns a single record identified by its UUID. The record is represented as
 
-        a map of field UUIDs to values. Use the /fields endpoint to get field metadata.
-
-        '
+        a map of field UUIDs to values. Use the /fields endpoint to get field metadata.'
       operationId: getRecord
       parameters:
       - name: collectionId
@@ -521,9 +445,7 @@ paths:
 
         to string values for the fields you want to update. Only include fields that need
 
-        to be changed. Use the /fields endpoint to discover field IDs and write formats.
-
-        '
+        to be changed. Use the /fields endpoint to discover field IDs and write formats.'
       operationId: updateRecord
       parameters:
       - name: collectionId
@@ -570,18 +492,6 @@ paths:
           description: Record or collection not found
 components:
   schemas:
-    Collection:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          example: Shifts
-      required:
-      - id
-      - name
     SelectOption:
       type: object
       properties:
@@ -597,33 +507,6 @@ components:
       required:
       - id
       - name
-    ListCollectionsResponse:
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/ListCollectionsMetadata'
-        collections:
-          type: array
-          items:
-            $ref: '#/components/schemas/Collection'
-    GenericErrorResponse:
-      type: object
-      properties:
-        data:
-          type: 'null'
-        error:
-          type: string
-          description: Error message describing what went wrong
-          example: The page size exceeds the limit of 50
-    CreateRecordResponse:
-      type: object
-      properties:
-        data:
-          type: string
-          description: Success message containing the created record ID
-          example: 'Resource created with ID: 123e4567-e89b-12d3-a456-426614174000'
-        error:
-          type: 'null'
     ListCollectionsMetadata:
       type: object
       properties:
@@ -658,6 +541,61 @@ components:
             1d566c20-accd-450f-afad-8c572f176bd0: 4bfabc6f-f512-4c48-849b-8c94b83c215e
       required:
       - data
+    RecordData:
+      type: object
+      additionalProperties: true
+      description: 'Record data as a map of field UUIDs to values. Keys are field identifiers (UUIDs).
+
+        Values are typed according to the field type (string, number, boolean, object, array, or null).
+
+        '
+      example:
+        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+        f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
+        8d74ff97-4cb5-49c8-af77-a3d98af4b1c2: false
+        ade2b23c-6a3b-49fe-bc13-d37b0c39941c: 1234
+        0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7: '2024-01-15T10:30:00Z'
+    ListCollectionsResponse:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ListCollectionsMetadata'
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Collection'
+    CreateRecordResponse:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Success message containing the created record ID
+          example: 'Resource created with ID: 123e4567-e89b-12d3-a456-426614174000'
+        error:
+          type: 'null'
+    GenericErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: The page size exceeds the limit of 50
+    Collection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Shifts
+      required:
+      - id
+      - name
     Field:
       type: object
       properties:
@@ -751,22 +689,6 @@ components:
       - name
       - readOnly
       - type
-    RecordData:
-      type: object
-      additionalProperties: true
-      description: 'Record data as a map of field UUIDs to values. Keys are field identifiers (UUIDs).
-
-        Values are typed according to the field type (string, number, boolean, object, array, or null).
-
-        '
-      example:
-        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
-        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
-        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
-        f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
-        8d74ff97-4cb5-49c8-af77-a3d98af4b1c2: false
-        ade2b23c-6a3b-49fe-bc13-d37b0c39941c: 1234
-        0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7: '2024-01-15T10:30:00Z'
   securitySchemes:
     OAuth2:
       type: oauth2
