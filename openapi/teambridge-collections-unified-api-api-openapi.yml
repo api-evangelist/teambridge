@@ -492,21 +492,6 @@ paths:
           description: Record or collection not found
 components:
   schemas:
-    SelectOption:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Option identifier (use this UUID in write requests)
-          example: bb31a869-2e73-4468-ab94-73ea256e08a2
-        name:
-          type: string
-          description: Option display name
-          example: RN - Registered Nurse
-      required:
-      - id
-      - name
     ListCollectionsMetadata:
       type: object
       properties:
@@ -541,61 +526,6 @@ components:
             1d566c20-accd-450f-afad-8c572f176bd0: 4bfabc6f-f512-4c48-849b-8c94b83c215e
       required:
       - data
-    RecordData:
-      type: object
-      additionalProperties: true
-      description: 'Record data as a map of field UUIDs to values. Keys are field identifiers (UUIDs).
-
-        Values are typed according to the field type (string, number, boolean, object, array, or null).
-
-        '
-      example:
-        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
-        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
-        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
-        f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
-        8d74ff97-4cb5-49c8-af77-a3d98af4b1c2: false
-        ade2b23c-6a3b-49fe-bc13-d37b0c39941c: 1234
-        0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7: '2024-01-15T10:30:00Z'
-    ListCollectionsResponse:
-      type: object
-      properties:
-        metadata:
-          $ref: '#/components/schemas/ListCollectionsMetadata'
-        collections:
-          type: array
-          items:
-            $ref: '#/components/schemas/Collection'
-    CreateRecordResponse:
-      type: object
-      properties:
-        data:
-          type: string
-          description: Success message containing the created record ID
-          example: 'Resource created with ID: 123e4567-e89b-12d3-a456-426614174000'
-        error:
-          type: 'null'
-    GenericErrorResponse:
-      type: object
-      properties:
-        data:
-          type: 'null'
-        error:
-          type: string
-          description: Error message describing what went wrong
-          example: The page size exceeds the limit of 50
-    Collection:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-          example: Shifts
-      required:
-      - id
-      - name
     Field:
       type: object
       properties:
@@ -689,6 +619,76 @@ components:
       - name
       - readOnly
       - type
+    ListCollectionsResponse:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/ListCollectionsMetadata'
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/Collection'
+    GenericErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          type: string
+          description: Error message describing what went wrong
+          example: The page size exceeds the limit of 50
+    RecordData:
+      type: object
+      additionalProperties: true
+      description: 'Record data as a map of field UUIDs to values. Keys are field identifiers (UUIDs).
+
+        Values are typed according to the field type (string, number, boolean, object, array, or null).
+
+        '
+      example:
+        c5a8e667-fe00-4c18-a559-84bfdbf7e8d1: Sarah
+        df14fac6-ce85-480b-a5a8-0e5b90471205: Johnson
+        199c7b23-5ba6-4cf4-a778-6da9394b7884: sarah.johnson@hospital.com
+        f7958d78-9e4c-4d23-a16e-ac732636b281: '+14155551234'
+        8d74ff97-4cb5-49c8-af77-a3d98af4b1c2: false
+        ade2b23c-6a3b-49fe-bc13-d37b0c39941c: 1234
+        0fe6e99f-8e3a-4f21-b315-3b149bcdf2f7: '2024-01-15T10:30:00Z'
+    Collection:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Shifts
+      required:
+      - id
+      - name
+    CreateRecordResponse:
+      type: object
+      properties:
+        data:
+          type: string
+          description: Success message containing the created record ID
+          example: 'Resource created with ID: 123e4567-e89b-12d3-a456-426614174000'
+        error:
+          type: 'null'
+    SelectOption:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Option identifier (use this UUID in write requests)
+          example: bb31a869-2e73-4468-ab94-73ea256e08a2
+        name:
+          type: string
+          description: Option display name
+          example: RN - Registered Nurse
+      required:
+      - id
+      - name
   securitySchemes:
     OAuth2:
       type: oauth2

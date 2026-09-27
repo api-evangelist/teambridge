@@ -187,27 +187,6 @@ paths:
           description: Mapping not found
 components:
   schemas:
-    ErrorDetail:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: Machine-readable error code
-      required:
-      - message
-      - code
-    StandardErrorResponse:
-      type: object
-      properties:
-        data:
-          type: 'null'
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
-      required:
-      - error
     CreateMappingRequest:
       type: object
       required:
@@ -242,6 +221,18 @@ components:
           type: string
           description: New external ID for the mapping
           example: EXT-67890
+    ErrorDetail:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+      required:
+      - message
+      - code
     MappingDto:
       type: object
       required:
@@ -280,6 +271,15 @@ components:
           format: date-time
           description: Timestamp when the mapping was created in ISO 8601 format with timezone (YYYY-MM-DDTHH:MM:SSZ)
           example: '2025-01-15T10:30:00Z'
+    StandardErrorResponse:
+      type: object
+      properties:
+        data:
+          type: 'null'
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      required:
+      - error
   securitySchemes:
     OAuth2:
       type: oauth2
