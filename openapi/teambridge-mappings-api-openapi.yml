@@ -187,31 +187,15 @@ paths:
           description: Mapping not found
 components:
   schemas:
-    CreateMappingRequest:
+    StandardErrorResponse:
       type: object
-      required:
-      - recordId
-      - providerCode
-      - externalId
-      - externalObjectType
       properties:
-        recordId:
-          type: string
-          format: uuid
-          description: ID of the record in Teambridge
-          example: 550e8400-e29b-41d4-a716-446655440000
-        providerCode:
-          type: string
-          description: Code identifying the external provider
-          example: BULLHORN
-        externalId:
-          type: string
-          description: ID of the entity in the external system
-          example: EXT-12345
-        externalObjectType:
-          type: string
-          description: Type of the object in the external system
-          example: Candidate
+        data:
+          type: 'null'
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+      required:
+      - error
     UpdateMappingRequest:
       type: object
       required:
@@ -221,18 +205,6 @@ components:
           type: string
           description: New external ID for the mapping
           example: EXT-67890
-    ErrorDetail:
-      type: object
-      properties:
-        message:
-          type: string
-          description: Human-readable error message
-        code:
-          type: string
-          description: Machine-readable error code
-      required:
-      - message
-      - code
     MappingDto:
       type: object
       required:
@@ -271,15 +243,43 @@ components:
           format: date-time
           description: Timestamp when the mapping was created in ISO 8601 format with timezone (YYYY-MM-DDTHH:MM:SSZ)
           example: '2025-01-15T10:30:00Z'
-    StandardErrorResponse:
+    CreateMappingRequest:
+      type: object
+      required:
+      - recordId
+      - providerCode
+      - externalId
+      - externalObjectType
+      properties:
+        recordId:
+          type: string
+          format: uuid
+          description: ID of the record in Teambridge
+          example: 550e8400-e29b-41d4-a716-446655440000
+        providerCode:
+          type: string
+          description: Code identifying the external provider
+          example: BULLHORN
+        externalId:
+          type: string
+          description: ID of the entity in the external system
+          example: EXT-12345
+        externalObjectType:
+          type: string
+          description: Type of the object in the external system
+          example: Candidate
+    ErrorDetail:
       type: object
       properties:
-        data:
-          type: 'null'
-        error:
-          $ref: '#/components/schemas/ErrorDetail'
+        message:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
       required:
-      - error
+      - message
+      - code
   securitySchemes:
     OAuth2:
       type: oauth2
