@@ -64,6 +64,132 @@
 > Full detail: **[Where this data comes from](https://apievangelist.com/about/where-our-data-comes-from)**
 <!-- API-EVANGELIST-PROVENANCE:END -->
 
-Teambridge is a company surfaced as a portfolio company of general-catalyst, mayfield and added to the API Evangelist network as a stub for enrichment. This profile is a lead awaiting the enrichment pipeline.
+Teambridge is an AI-native workforce-management platform for frontline and hourly teams, unifying scheduling, time tracking, instant pay, team communication, onboarding, compliance, and payroll behind autonomous AI agents. For integrators it publishes the Teambridge External API, a unified Collections API (OpenAPI 3.1.0) that reads and writes shifts, users, placements, locations, and custom collections, authenticated with OAuth 2.0 client credentials and complemented by HMAC-signed outbound webhooks for real-time change notification. Teambridge is backed by General Catalyst and Mayfield and reports SOC 2 Type II, ISO 27001, HIPAA, and GDPR compliance.
 
-Backed by: general-catalyst, mayfield — https://teambridge.com
+**Areas:** Company · Workforce Management · Scheduling · Time Tracking · Payroll · Human Resources · Frontline · Webhook
+
+## Teambridge on APIs.io
+
+Everything profiled for Teambridge is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/teambridge/](https://apis.io/providers/teambridge/)** — or go straight to one of the APIs or properties below.
+
+### APIs (5)
+
+- [Teambridge Collections (Unified API) API](https://apis.io/apis/teambridge/teambridge-collections-unified-api-api/) — **Powerful generic endpoints** for reading and writing any collection type. Works with all collections using field UUIDs. Query `/fields` first to discover…
+- [Teambridge Documents API](https://apis.io/apis/teambridge/teambridge-documents-api/) — Endpoints for uploading and managing documents.
+- [Teambridge Mappings API](https://apis.io/apis/teambridge/teambridge-mappings-api/) — Endpoints for managing external system mappings. Mappings link Teambridge records to entities in external systems (like Bullhorn, ADP, etc.) by storing the…
+- [Teambridge Utilities API](https://apis.io/apis/teambridge/teambridge-utilities-api/) — Utility endpoints for timezone information and other general-purpose data.
+- [Teambridge External API](https://apis.io/apis/teambridge/teambridge-teambridge-external-api-api/) — The Teambridge External API API from Teambridge — 0 operation(s) for teambridge external api.
+
+### Published properties
+
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
+
+#### AsyncAPI (1)
+
+Event-driven and webhook contracts.
+
+- [Teambridge Webhooks](https://apis.io/asyncapis/teambridge/teambridge-webhooks/)
+
+#### MCP servers (1)
+
+Model Context Protocol servers that expose the API to agents.
+
+- [teambridge](https://apis.io/servers/teambridge/teambridge/)
+
+#### Collections (4)
+
+Postman and Open Collection request collections.
+
+- [Teambridge External Collections (Unified API) Collections (Unified API) Collections (Unified API) API](https://apis.io/collections/teambridge/open-teambridge-collections-unified-api-api/)
+- [Teambridge External Collections (Unified API) Collections (Unified API) Documents API](https://apis.io/collections/teambridge/open-teambridge-documents-api/)
+- [Teambridge External Collections (Unified API) Collections (Unified API) Mappings API](https://apis.io/collections/teambridge/open-teambridge-mappings-api/)
+- [Teambridge External Collections (Unified API) Collections (Unified API) Utilities API](https://apis.io/collections/teambridge/open-teambridge-utilities-api/)
+
+#### Overlays (1)
+
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Teambridge External Api Overlay](https://apis.io/overlays/teambridge/teambridge-external-api-overlay/)
+
+#### Security (3)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Teambridge Authentication](https://apis.io/security/teambridge/teambridge-authentication/)
+- [Teambridge Domain Security](https://apis.io/security/teambridge/teambridge-domain-security/)
+- [Teambridge Trust Center](https://apis.io/security/teambridge/teambridge-trust-center/)
+
+#### OAuth scopes (1)
+
+The permissions the API asks for.
+
+- [Teambridge Scopes](https://apis.io/scopes/teambridge/teambridge-scopes/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://teambridge.com)
+- [Documentation](https://docs.teambridge.com)
+- [API reference](https://docs.teambridge.com)
+- [Pricing](https://teambridge.com/pricing)
+- [Sign up](https://teambridge.com/book-demo)
+- [Blog](https://teambridge.com/blog)
+- [Compliance](https://security.teambridge.com/)
+- [Terms of service](https://teambridge.com/terms-of-use)
+- [Privacy policy](https://teambridge.com/privacy-policy)
+
+## API Evangelist rating
+
+**Kin Score 51.6** — developing · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 61.4 |
+| Contract governance | 18.2 |
+| Operational transparency | 7.9 |
+| Developer ergonomics | 42.3 |
+| Access clarity | 60.5 |
+
+**Agent readiness 32.1** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | negotiable (partial credit) |
+| Idempotency | — |
+| Error Semantics | verified |
+| OpenAPI Examples | partial |
+| Rate Limit Signal | — |
+| Event Surface Described | yes |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | — |
+| Agentic Commerce | — |
+| Pagination Ratio | — |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 39.2** — Employment & Payroll
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/teambridge/](https://apis.io/providers/teambridge/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Teambridge: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/teambridge/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
